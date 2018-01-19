@@ -10,7 +10,7 @@
 // *****************************************************************************
 let routes = require('./routes')
 let mongoose = require('mongoose')
-let models = require('./models')
+let schemas = require('./schemas')
 // *****************************************************************************
 // Middleware
 // *****************************************************************************
@@ -29,7 +29,7 @@ module.exports = {
     return new Promise(function (resolve, reject) {
       mongoose.connect(process.env.MONGO_URI)
       mongoose.connection.once('open', () => {
-        app.models = models
+        app.schemas = schemas
         resolve(app)
       })
       mongoose.connection.once('error', reject)

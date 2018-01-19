@@ -24,11 +24,7 @@ RUN npm install -g nodemon
 COPY ./ /app
 
 
-# Persist data to the data volume
-VOLUME /data
-
-
-# Expose port 80
+# Expose port 8888
 EXPOSE 8888
 
 

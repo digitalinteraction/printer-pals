@@ -4,7 +4,6 @@
  Description:
  - Logging middlware.
  */
-
 module.exports = function (app) {
   app.use(function (req, res, next) {
     let ip
@@ -16,7 +15,7 @@ module.exports = function (app) {
       ip = req.ip
     }
 
-    app.models.Traffic.create({
+    app.schemas.Traffic.create({
       ip: ip,
       method: req.method,
       path: req.path,

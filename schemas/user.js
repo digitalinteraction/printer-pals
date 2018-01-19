@@ -8,8 +8,16 @@
 const mongoose = require('mongoose')
 
 let userModel = {
-  name: 'string',
-  password: 'string'
+  username: {
+    type: 'String',
+    unique: true,
+    required: true,
+    dropDups: true
+  },
+  password: {
+    type: 'String',
+    required: true
+  }
 }
 
 module.exports = mongoose.Schema(userModel)
