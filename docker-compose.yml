@@ -1,0 +1,36 @@
+version: '2'
+services:
+    web:
+        build: .
+        ports:
+        - 8888:8888
+        volumes:
+        - "./config:/app/config"
+        # - "./server/controllers:/app/controllers"
+        - "./middleware:/app/middleware"
+        - "./models:/app/models"
+        - "./routes:/app/routes"
+        # - "./server/utils:/app/utils"
+        - "./app.js:/app/app.js"
+        - "./package.json:/app/package.json"
+        - "./package-lock.json:/app/package-lock.json"
+        - "./server.js:/app/server.js"
+        - "./.env:/app/.env"
+        # - "./webapp/dist:/app/dist"
+        depends_on:
+          - mongo
+        links:
+          - mongo
+        environment:
+          MONGO_URI: mongodb://mongo/game
+    mongo:
+      image: mongo
+      ports:
+        - "27017:27017"
+    #     MYSQL_ROOT_PASSWORD: secret
+    #     MYSQL_PASSWORD: secret
+      volumes:
+        - 'mongo:/data/db'
+    #   restart: always
+volumes:
+  mongo:
