@@ -8,14 +8,14 @@
 // *****************************************************************************
 // Routes
 // *****************************************************************************
-let routes = require('./routes')
-let mongoose = require('mongoose')
-let schemas = require('./schemas')
+const routes = require('./routes')
+const mongoose = require('mongoose')
+const schemas = require('./schemas')
 // *****************************************************************************
 // Middleware
 // *****************************************************************************
-let loggerMiddleware = require('./middleware/logger')
-let handlerMiddleware = require('./middleware/handler')
+const loggerMiddleware = require('./middleware/logger')
+const handlerMiddleware = require('./middleware/handler')
 
 // *****************************************************************************
 // Setup

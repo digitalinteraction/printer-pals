@@ -8,6 +8,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const path = require('path')
+require('dotenv').config()
 
 const app = express()
 
@@ -20,5 +21,7 @@ app.use(bodyParser.urlencoded({
 
 app.set('view engine', 'ejs')
 app.engine('html', require('ejs').renderFile)
+
+app.set('secret', process.env.APP_SECRET)
 
 module.exports = app

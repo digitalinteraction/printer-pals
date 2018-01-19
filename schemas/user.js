@@ -17,6 +17,9 @@ let userModel = {
   password: {
     type: 'String',
     required: true
+  },
+  iv: {
+    type: 'String'
   }
 }
 

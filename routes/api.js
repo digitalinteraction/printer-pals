@@ -7,7 +7,9 @@ const path = require('path')
 const fs = require('fs')
 const multer = require('multer')
 const crypto = require('crypto')
+const jwt = require('jsonwebtoken')
 require('dotenv').config()
+const authMiddleware = require('./../middleware/authenticate')
 
 let upload = multer({ dest: 'uploads/' })
 let last = {}
@@ -42,19 +44,21 @@ module.exports = function (app) {
     }
 
     // Hash user's password
+    let iv
+    const hash = crypto.createHash('sha256')
     try {
-      const iv = crypto.randomBytes(16).toString('ascii')
-      const hash = crypto.createHash('sha256')
+      iv = crypto.randomBytes(16).toString('ascii')
       hash.update(`${iv}${password}`)
       password = hash.digest(password).toString('ascii')
     } catch (e) {
-      console.error(e)
+      e.status = 500
+      return next(e)
     }
 
     let user
 
     try {
-      user = await app.schemas.User.create({username, password})
+      user = await app.schemas.User.create({username, password, iv})
     } catch (e) {
       e.status = 400
       return next(e)
@@ -75,6 +79,63 @@ module.exports = function (app) {
     })
 
     res.redirect('/')
+  })
+
+  /**
+   * Upload a file
+   * @type {[type]}
+   */
+  routes.post('/authenticate', async (req, res, next) => {
+    const username = req.body.username
+    let password = req.body.password
+
+    let user
+    try {
+      user = await app.schemas.User.findOne({username}, (user))
+    } catch (e) {
+      return next(e)
+    }
+
+    if (!user) {
+      return next(new Error())
+    }
+
+    const hash = crypto.createHash('sha256')
+    try {
+      hash.update(`${user.iv}${password}`)
+      password = hash.digest(password).toString('ascii')
+      if (user.password !== password) {
+        let e = new Error()
+        e.message = 'Incorrect password'
+        e.status = 403
+        return next(e)
+      }
+    } catch (e) {
+      e.status = 500
+      return next(e)
+    }
+
+    let payload = {
+      username: user.username
+    }
+    var token = jwt.sign(payload, app.get('secret'), {
+      expiresIn: '1 day' // expires in 24 hours
+    })
+
+    // return the information including token as JSON
+    return res.json({
+      success: true,
+      token: token
+    })
+  })
+
+  // **********************************************************************************
+  // PROTECTED ROUTES ONLY BELOW
+  // **********************************************************************************
+  routes.use(authMiddleware(app))
+
+  routes.get('/protected', async (req, res, next) => {
+    res.send('protected route')
   })
 
   return routes
