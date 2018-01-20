@@ -18,3 +18,16 @@ can complete with a friend in a care home.
 - Server to upload content
 - Client to print content when uploaded, listening on web sockets
 - Client to print content when scanned, listening on web sockets
+
+## Starting the server
+Create a `.env` file with the following contents:
+```
+DEBUG=false
+DB_USER=user
+DB_PASS=password
+DB_HOST=mongo
+DB_NAME=database_name
+PORT=27017
+SALT_ROUNDS=10
+APP_SECRET=random_secret_string
+```

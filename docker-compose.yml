@@ -5,14 +5,9 @@ services:
         ports:
         - 8888:8888
         volumes:
-        - "./config:/app/config"
-        - "./middleware:/app/middleware"
-        - "./schemas:/app/schemas"
-        - "./routes:/app/routes"
+        - "./web:/app/web"
         - "./app.js:/app/app.js"
-        - "./server.js:/app/server.js"
         - "./.env:/app/.env"
-        - "./response.js:/app/response.js"
         depends_on:
           - mongo
         links:

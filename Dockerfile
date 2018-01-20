@@ -21,7 +21,9 @@ RUN npm install
 RUN npm install -g nodemon
 
 
-COPY ./ /app
+COPY ./web /app/web
+COPY ./.env /app/.env
+COPY ./app.js /app/app.js
 
 
 # Expose port 8888
@@ -29,4 +31,4 @@ EXPOSE 8888
 
 
 # Start the server.
-CMD nodemon app.js
+CMD nodemon /app/app.js

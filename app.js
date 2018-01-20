@@ -5,24 +5,15 @@
    - Start an instance of the server.
   */
 
-const server = require('./server')
+const server = require('./web/server')
 
 async function main () {
   try {
     let app = server.getServerInstance()
-    console.log('Getting basic server instance')
-
     app = await server.initDatabase(app)
-    console.log('Attaching database connection')
-
     app = server.addLogging(app)
-    console.log('Adding logging middleware')
-
     app = server.addRoutes(app)
-    console.log('Attaching routes')
-
     app = server.addErrorHandler(app)
-    console.log('Adding error handler')
 
     app.enable('trust proxy')
 
