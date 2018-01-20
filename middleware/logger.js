@@ -1,9 +1,10 @@
 /**
- Created:  13/04/17
+ Created:  19/01/18
  Author:   Daniel Welsh
  Description:
- - Logging middlware.
+    Middleware that logs all server traffic
  */
+
 module.exports = function (app) {
   app.use(function (req, res, next) {
     let ip
@@ -22,6 +23,7 @@ module.exports = function (app) {
       user_agent: req.headers['user-agent'],
       time_stamp: new Date()
     }).catch(error => {
+      // TODO: log errors to files
       console.log(error)
     })
 

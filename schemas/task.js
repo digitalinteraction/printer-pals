@@ -2,25 +2,27 @@
  Created:  19/01/18
  Author:   Daniel Welsh
  Description:
-  - Schema of a user
+  - Schema of a task
  */
 
 const mongoose = require('mongoose')
 
-let userModel = {
-  username: {
-    type: 'String',
-    unique: true,
-    required: true,
-    dropDups: true
-  },
-  password: {
+let taskModel = {
+  userId: {
     type: 'String',
     required: true
   },
-  iv: {
+  title: {
+    type: 'String',
+    required: true
+  },
+  mediaType: {
+    type: 'String',
+    required: true
+  },
+  filePath: {
     type: 'String'
   }
 }
 
-module.exports = mongoose.Schema(userModel)
+module.exports = mongoose.Schema(taskModel)

@@ -1,8 +1,8 @@
 /**
- Created:  13/04/2017
- Author:   Daniel
+ Created:  19/01/18
+ Author:   Daniel Welsh
  Description:
-    -   Router for the home path.
+    Set up the home page routes
  */
 
 const express = require('express')

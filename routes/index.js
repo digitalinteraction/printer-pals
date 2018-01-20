@@ -1,8 +1,8 @@
 /**
- Created:  13/04/17
+ Created:  19/01/18
  Author:   Daniel Welsh
  Description:
-  - Initialise routes.
+    Auto add routes through searching through files
  */
 
 const fs = require('fs')

@@ -1,5 +1,8 @@
 /**
- * Endpoints for api.
+ Created:  19/01/18
+ Author:   Daniel Welsh
+ Description:
+  Endpoints for API
  */
 
 const express = require('express')
@@ -27,15 +30,18 @@ module.exports = function (app) {
    * @return {Object}        return a user object
    */
   routes.post('/register', async function (req, res, next) {
+    // Get username and password
     const username = req.body.username
     let password = req.body.password
 
+    // abort if either username or password are null
     if (!username || !password) {
       let e = new Error()
       e.status = 400
       return next(e)
     }
 
+    // check for an existing user
     let sUser = await app.schemas.User.findOne({username})
     if (sUser) {
       let e = new Error()
@@ -43,7 +49,7 @@ module.exports = function (app) {
       return next(e)
     }
 
-    // Hash user's password
+    // Hash user's given password after mixing with a random id
     let iv
     const hash = crypto.createHash('sha256')
     try {
@@ -55,16 +61,16 @@ module.exports = function (app) {
       return next(e)
     }
 
+    // create the user
     let user
-
     try {
       user = await app.schemas.User.create({username, password, iv})
     } catch (e) {
-      e.status = 400
+      e.status = 500
       return next(e)
     }
 
-    return res.send(user)
+    return res.json(user)
   })
 
   /**
@@ -82,13 +88,15 @@ module.exports = function (app) {
   })
 
   /**
-   * Upload a file
-   * @type {[type]}
+   * Authenticate a user and return a JWT token
+   * @type {Object}
    */
   routes.post('/authenticate', async (req, res, next) => {
+    // Get username and password from request
     const username = req.body.username
     let password = req.body.password
 
+    // Look for user with matching username
     let user
     try {
       user = await app.schemas.User.findOne({username}, (user))
@@ -97,13 +105,17 @@ module.exports = function (app) {
     }
 
     if (!user) {
-      return next(new Error())
+      let e = new Error()
+      e.status = 400
+      return next(e)
     }
 
+    // Hash given password with matching user's stored iv
     const hash = crypto.createHash('sha256')
     try {
       hash.update(`${user.iv}${password}`)
       password = hash.digest(password).toString('ascii')
+      // Compare passwords and abort if no match
       if (user.password !== password) {
         let e = new Error()
         e.message = 'Incorrect password'
@@ -115,10 +127,14 @@ module.exports = function (app) {
       return next(e)
     }
 
+    // create a payload
     let payload = {
+      id: user.id,
       username: user.username
     }
-    var token = jwt.sign(payload, app.get('secret'), {
+
+    // create and sign token against the app secret
+    const token = jwt.sign(payload, app.get('secret'), {
       expiresIn: '1 day' // expires in 24 hours
     })
 
@@ -132,10 +148,76 @@ module.exports = function (app) {
   // **********************************************************************************
   // PROTECTED ROUTES ONLY BELOW
   // **********************************************************************************
+  // Add in authentication middleware to route
+  // All routes below require a valid JWT token
   routes.use(authMiddleware(app))
 
-  routes.get('/protected', async (req, res, next) => {
-    res.send('protected route')
+  /**
+   * Store a task
+   * @type {[type]}
+   */
+  routes.post('/task/create', async (req, res, next) => {
+    // populate task details from request body
+    const { title, mediaType, filePath } = req.body
+
+    // store task
+    let task
+    try {
+      task = await app.schemas.Task.create({
+        userId: req.user.id,
+        title,
+        mediaType,
+        filePath
+      })
+    } catch (e) {
+      e.status = 500
+      return next(e)
+    }
+
+    return res.json(task)
+  })
+
+  /**
+   * View all tasks associated with the user
+   * @type {Object}
+   */
+  routes.get('/task/all', async (req, res, next) => {
+    let tasks
+    try {
+      tasks = await app.schemas.Task.find({userId: req.user.id})
+    } catch (e) {
+      e.status = 500
+      return next(e)
+    }
+
+    return res.json(tasks)
+  })
+
+  /**
+   * Get a task by id
+   * @param {string} id task id
+   * @type {Task}
+   */
+  routes.get('/task/:id', async (req, res, next) => {
+    // get id from request params
+    const id = req.params.id
+    let task
+    try {
+      task = await app.schemas.Task.findOne({_id: id})
+    } catch (e) {
+      e.status = 500
+      return next(e)
+    }
+
+    // abort if task not found
+    if (!task) {
+      let e = new Error()
+      e.message = 'Resource not found'
+      e.status = 404
+      return next(e)
+    }
+
+    return res.json(task)
   })
 
   return routes

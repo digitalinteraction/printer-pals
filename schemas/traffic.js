@@ -1,8 +1,8 @@
 /**
- Created:  13/04/17
+ Created:  19/01/18
  Author:   Daniel Welsh
  Description:
-  - Model a log record.
+  - Schema of a traffic instance
  */
 
 const mongoose = require('mongoose')

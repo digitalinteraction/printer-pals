@@ -1,14 +1,15 @@
 /**
- Created:  13/04/17
+ Created:  19/01/18
  Author:   Daniel Welsh
  Description:
-  - Error handler middlerware.
+    Handle errors passed on from the API
+    TODO: log errors to files
  */
 
 require('dotenv').config()
 
 module.exports = function (app) {
-  // TODO change this for deployment
+  // Print stack traces when in debugging mode
   if (process.env.DEBUG) {
     app.use(function (err, req, res, next) {
       console.error(err)
