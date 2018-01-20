@@ -12,6 +12,7 @@ services:
         - "./app.js:/app/app.js"
         - "./server.js:/app/server.js"
         - "./.env:/app/.env"
+        - "./response.js:/app/response.js"
         depends_on:
           - mongo
         links:

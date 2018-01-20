@@ -13,6 +13,7 @@ const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 const authMiddleware = require('./../middleware/authenticate')
+let responses = require('./../response')
 
 let upload = multer({ dest: 'uploads/' })
 let last = {}
@@ -70,7 +71,9 @@ module.exports = function (app) {
       return next(e)
     }
 
-    return res.json(user)
+    let response = responses.success
+    response.payload = { user }
+    return res.json(response)
   })
 
   /**
@@ -138,11 +141,9 @@ module.exports = function (app) {
       expiresIn: '1 day' // expires in 24 hours
     })
 
-    // return the information including token as JSON
-    return res.json({
-      success: true,
-      token: token
-    })
+    let response = responses.success
+    response.payload = { token }
+    return res.json(response)
   })
 
   // **********************************************************************************
@@ -174,7 +175,9 @@ module.exports = function (app) {
       return next(e)
     }
 
-    return res.json(task)
+    let response = responses.success
+    response.payload = { task }
+    return res.json(response)
   })
 
   /**
@@ -190,7 +193,9 @@ module.exports = function (app) {
       return next(e)
     }
 
-    return res.json(tasks)
+    let response = responses.success
+    response.payload = { tasks }
+    return res.json(response)
   })
 
   /**
@@ -217,7 +222,9 @@ module.exports = function (app) {
       return next(e)
     }
 
-    return res.json(task)
+    let response = responses.success
+    response.payload = { task }
+    return res.json(response)
   })
 
   return routes
