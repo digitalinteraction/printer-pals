@@ -23,6 +23,25 @@ const authenticate = (username, password) => {
 }
 
 /**
+ * Register an account
+ * @param  {string} username Username
+ * @param  {string} password Password
+ * @return {Object}          User
+ */
+const register = (username, password) => {
+  return new Promise((resolve, reject) => {
+    axios.post(`${URL}/register`, {
+      username: username,
+      password: password
+    }).then((response) => {
+      resolve(response)
+    }).catch((error) => {
+      reject(error)
+    })
+  })
+}
+
+/**
  * Get the user from a token
  * @param  {string} token JWT token
  * @return {User}         User
@@ -43,6 +62,7 @@ const getUser = (token) => {
 }
 
 export default {
+  register,
   authenticate,
   getUser
 }

@@ -5,8 +5,9 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="field is-grouped">
-              <div class="control logout" @click="logout">
-                <p v-if="isLoggedIn">Logout</p>
+              <div class="control logout">
+                <p v-if="isLoggedIn" @click="logout">Logout</p>
+                <!-- <p v-else>Register</p> -->
               </div>
             </div>
           </div>

@@ -1,5 +1,5 @@
 <template lang="html">
-  <div id="login">
+  <div id="register">
     <section class="section">
       <div class="container">
         <div class="columns">
@@ -18,8 +18,15 @@
               </div>
             </div>
 
+            <div class="field">
+              <label class="label">Confirm Password</label>
+              <div class="control">
+                <input class="input" type="password" placeholder="secret" value="" v-model="confPassword">
+              </div>
+            </div>
+
             <div class="control">
-              <button class="button is-primary" @click="login">Login</button>
+              <button class="button is-primary" @click="register">Register</button>
             </div>
           </div>
         </div>
@@ -31,28 +38,32 @@
 <script>
 import api from './../../api'
 export default {
-  name: 'Login',
+  name: 'Register',
   data () {
     return {
       username: '',
-      password: ''
+      password: '',
+      confPassword: ''
     }
   },
   methods: {
-    login: async function () {
-      // try and authenticate user
-      let response
-      try {
-        response = await api.user.authenticate(this.username, this.password)
-      } catch (e) {
-        console.error(e)
-        if (e.status === 400) {
-          console.log('auth failed')
-          alert('The username or password was incorrect')
-        }
+    register: async function () {
+      // try and register user
+      if (this.password !== this.confPassword) {
+        alert('Passwords must match')
+        return
       }
 
-      let user = {
+      let response
+      try {
+        response = await api.user.register(this.username, this.password)
+      } catch (e) {
+        console.log('Registration Failed')
+        alert('The username is already taken')
+        return
+      }
+
+      const user = {
         username: this.username,
         token: response.data.payload.token
       }
@@ -70,6 +81,4 @@ export default {
 </script>
 
 <style lang="scss">
-  input {
-  }
 </style>

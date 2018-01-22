@@ -72,8 +72,18 @@ module.exports = function (app) {
       return next(e)
     }
 
+    // create a payload
+    const payload = {
+      id: user.id,
+      username: user.username
+    }
+    // create and sign token against the app secret
+    const token = jwt.sign(payload, app.get('secret'), {
+      expiresIn: '1 day' // expires in 24 hours
+    })
+
     let response = responses.success
-    response.payload = { user }
+    response.payload = { user, token }
     return res.json(response)
   })
 
