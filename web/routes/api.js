@@ -13,6 +13,7 @@ const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 const authMiddleware = require('./../middleware/authenticate')
+const qr = require('qr-image')
 let responses = require('./../response')
 
 let upload = multer({ dest: 'uploads/' })
@@ -154,6 +155,24 @@ module.exports = function (app) {
   routes.use(authMiddleware(app))
 
   /**
+   * Return a qr code for a user's profile
+   * @type {[type]}
+   */
+  routes.get('/user/qr', async (req, res, next) => {
+    // set file type
+    const fileType = 'svg'
+
+    // generate qr code as svg
+    const qrSVG = qr.image(`user:${req.user.id}`, { type: fileType })
+
+    // set headers
+    res.setHeader('Content-Type', 'image/svg+xml')
+
+    // pipe qr code into the response
+    qrSVG.pipe(res)
+  })
+
+  /**
    * Store a task
    * @type {[type]}
    */
@@ -225,6 +244,28 @@ module.exports = function (app) {
     let response = responses.success
     response.payload = { task }
     return res.json(response)
+  })
+
+  /**
+   * Get a qr code for a task by id
+   * @param {string} id task id
+   * @type {Task}
+   */
+  routes.get('/task/qr/:id', async (req, res, next) => {
+    // Get QR code from request
+    let id = req.params.id
+
+    // set file type
+    const fileType = 'svg'
+
+    // generate qr code as svg
+    const qrSVG = qr.image(`task:${id}`, { type: fileType })
+
+    // set headers
+    res.setHeader('Content-Type', 'image/svg+xml')
+
+    // pipe qr code into the response
+    qrSVG.pipe(res)
   })
 
   return routes
