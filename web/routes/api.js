@@ -155,6 +155,24 @@ module.exports = function (app) {
   routes.use(authMiddleware(app))
 
   /**
+   * Get the user from a token
+   * @type {Object} User
+   */
+  routes.get('/user', async (req, res, next) => {
+    let user
+    try {
+      user = await app.schemas.User.findOne({_id: req.user.id})
+      user.password = ''
+      user.iv = ''
+    } catch (e) {
+      return next(e)
+    }
+
+    let response = responses.success
+    response.payload = user
+    return res.json(response)
+  })
+  /**
    * Return a qr code for a user's profile
    * @type {[type]}
    */
