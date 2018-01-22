@@ -72,8 +72,18 @@ module.exports = function (app) {
       return next(e)
     }
 
+    // create a payload
+    const payload = {
+      id: user.id,
+      username: user.username
+    }
+    // create and sign token against the app secret
+    const token = jwt.sign(payload, app.get('secret'), {
+      expiresIn: '1 day' // expires in 24 hours
+    })
+
     let response = responses.success
-    response.payload = { user }
+    response.payload = { user, token }
     return res.json(response)
   })
 
@@ -154,6 +164,24 @@ module.exports = function (app) {
   // All routes below require a valid JWT token
   routes.use(authMiddleware(app))
 
+  /**
+   * Get the user from a token
+   * @type {Object} User
+   */
+  routes.get('/user', async (req, res, next) => {
+    let user
+    try {
+      user = await app.schemas.User.findOne({_id: req.user.id})
+      user.password = ''
+      user.iv = ''
+    } catch (e) {
+      return next(e)
+    }
+
+    let response = responses.success
+    response.payload = user
+    return res.json(response)
+  })
   /**
    * Return a qr code for a user's profile
    * @type {[type]}
