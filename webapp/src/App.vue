@@ -1,16 +1,19 @@
 <template>
   <div id="app">
+    <navigation-bar></navigation-bar>
     <title-bar></title-bar>
     <login v-if="!isLoggedIn"></login>
-    <h1 v-else>{{ user.username }}</h1>
-    <router-view/>
+    <profile :user="user" v-else></profile>
+    <!-- <router-view/> -->
   </div>
 </template>
 
 <script>
 // Components
+import NavigationBar from './components/Navigation.vue'
 import TitleBar from './components/Title.vue'
 import Login from './components/auth/Login.vue'
+import Profile from './components/user/Profile.vue'
 
 // Packages
 import api from './api'
@@ -19,11 +22,13 @@ export default {
   name: 'App',
   components: {
     TitleBar,
-    Login
+    Login,
+    Profile,
+    NavigationBar
   },
   computed: {
     isLoggedIn () {
-      return this.$store.getters.getUser ? true : false
+      return !(this.$store.getters.getUser == null)
     },
     user () {
       return this.$store.getters.getUser ? this.$store.getters.getUser : undefined
