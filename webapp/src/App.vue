@@ -18,6 +18,7 @@
     </div>
 
     <profile :user="user" v-else></profile>
+    <tasks></tasks>
     <!-- <router-view/> -->
   </div>
 </template>
@@ -29,6 +30,7 @@ import TitleBar from './components/Title.vue'
 import Login from './components/auth/Login.vue'
 import Register from './components/auth/Register.vue'
 import Profile from './components/user/Profile.vue'
+import Tasks from './components/tasks/AllTasks.vue'
 
 // Packages
 import api from './api'
@@ -45,7 +47,8 @@ export default {
     Login,
     Register,
     Profile,
-    NavigationBar
+    NavigationBar,
+    Tasks
   },
   computed: {
     isLoggedIn () {
