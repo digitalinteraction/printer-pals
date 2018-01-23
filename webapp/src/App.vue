@@ -18,7 +18,7 @@
     </div>
 
     <profile :user="user" v-else></profile>
-    <tasks></tasks>
+    <tasks v-if="isLoggedIn"></tasks>
     <!-- <router-view/> -->
   </div>
 </template>

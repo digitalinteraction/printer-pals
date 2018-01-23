@@ -1,4 +1,4 @@
-# Printer Pals
+# Printer Pals 🖨
 ### A Printer Based Game to Support Interactions in Care Homes
 
 ## Description
