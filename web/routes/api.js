@@ -229,6 +229,32 @@ module.exports = function (app) {
   })
 
   /**
+   * Update a task
+   * @type {Object}
+   */
+  routes.post('/task/update', async (req, res, next) => {
+    const { id, title, description } = req.body
+
+    console.log(title, description)
+
+    let task
+
+    try {
+      task = await app.schemas.Task.update({_id: id}, {$set: {
+        title: title,
+        description: description
+      }})
+    } catch (e) {
+      e.status = 500
+      return next(e)
+    }
+
+    let response = responses.success
+    response.payload = { task }
+    return res.json(response)
+  })
+
+  /**
    * View all tasks associated with the user
    * @type {Object}
    */

@@ -49,24 +49,28 @@
         </div>
       </div>
       <div class="column auto" v-if="isEditing">
-        <div class="field">
-          <label class="label">Title</label>
+        <div class="update-form" v-if="!isBusy">
+          <div class="field">
+            <label class="label">Title</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="Fly Me to The Moon" v-model="task.title">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Task</label>
+            <div class="control">
+              <textarea class="textarea" placeholder="Lets sing it together!" rows="3" v-model="task.description"></textarea>
+            </div>
+          </div>
+
           <div class="control">
-            <input class="input" type="text" placeholder="Fly Me to The Moon" v-model="task.title">
+            <button class="button is-primary" @click="updateTask">Update</button>
           </div>
         </div>
-
-        <div class="field">
-          <label class="label">Task</label>
-          <div class="control">
-            <textarea class="textarea" placeholder="Lets sing it together!" rows="3" v-model="task.description"></textarea>
-          </div>
+        <div class="spinner" v-else>
+          <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
         </div>
-
-        <div class="control">
-          <button class="button is-primary" @click="updateTask">Update</button>
-        </div>
-      </div>
       </div>
     </div>
   </div>
@@ -74,12 +78,14 @@
 
 <script>
 import commons from './../../commons'
+import api from './../../api'
 export default {
   name: 'task',
   props: ['task'],
   data () {
     return {
-      isEditing: false
+      isEditing: false,
+      isBusy: false
     }
   },
   computed: {
@@ -91,36 +97,66 @@ export default {
     }
   },
   methods: {
+    /**
+     * Toggle the editing flag.
+     * @return {void}
+     */
     toggleEditing: function () {
       this.isEditing = !this.isEditing
     },
-    updateTask: function () {
-      // TODO: implement server side
-      // TODO: implement client side
-      console.log(this.task.title, this.task.description)
+    /**
+     * Update a task remotely.
+     * @return {void}
+     */
+    updateTask: async function () {
+      this.isBusy = true
+
+      let response
+
+      try {
+        // Probably should be an object rather than a load of parameters but whatevs
+        response = await api.task.updateTask(this.task._id, this.task.title, this.task.description, this.$cookie.get('token'))
+      } catch (e) {
+        console.log(e)
+        alert('Sorry, the task could not be updated.')
+      }
+
+      this.isEditing = false
+      this.isBusy = false
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  .card {
+.card {
     margin-top: 20px;
-  }
+}
 
-  .title {
+.title {
     padding-left: 1.5%;
-  }
+}
 
-  svg {
+svg {
     cursor: pointer;
-  }
+}
 
-  .active-icon {
+.active-icon {
     .edit-icon {
-      #Artboard-4 {
-        stroke: #00d1b2;
-      }
+        #Artboard-4 {
+            stroke: #00d1b2;
+        }
     }
-  }
+}
+
+.update-form {
+  padding-top: 2%;
+}
+
+.spinner {
+  font-size: 2em;
+  text-align: center;
+  padding-top: 5%;
+  color: #00d1b2;
+}
 </style>
