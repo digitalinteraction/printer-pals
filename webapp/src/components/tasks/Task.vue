@@ -13,7 +13,7 @@
           </div>
           <footer class="card-footer">
             <!-- Icons from: https://robbiepearce.com/softies/ -->
-            <p class="card-footer-item">
+            <p class="card-footer-item" @click="deleteTask">
               <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                 <defs></defs>
                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -90,7 +90,7 @@ export default {
   },
   computed: {
     url () {
-      return `${commons.URL}/task/qr/${this.task.id}?token=${this.$cookie.get('token')}`
+      return `${commons.URL}/task/qr/${this.task._id}?token=${this.$cookie.get('token')}`
     },
     title () {
       return this.task.title
@@ -123,6 +123,28 @@ export default {
 
       this.isEditing = false
       this.isBusy = false
+    },
+    /**
+     * Delete a task remotely
+     * @return {void}
+     */
+    deleteTask: async function () {
+      // Confirm before commiting a destructive action
+      const confirmed = confirm("Are you sure you want to delete this task?")
+
+      // Exit if not confirmed
+      if(!confirmed) return
+
+      let response
+
+      try {
+        response = await api.task.destroyTask(this.task._id, this.$cookie.get('token'))
+      } catch (e) {
+        console.log(e)
+      }
+
+      // Update store with new tasks
+      this.$store.commit('removeTask', this.task._id)
     }
   }
 }

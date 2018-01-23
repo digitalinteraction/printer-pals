@@ -5,6 +5,7 @@ const URL = commons.URL
 
 /**
  * Get all of the user's uploaded tasks
+ * @param  {string} token   Session token
  * @return {Object[]} An array of tasks
  */
 const getTasks = (token) => {
@@ -46,7 +47,29 @@ const updateTask = (id, title, description, token) => {
   })
 }
 
+/**
+ * Delete a task
+ * @param  {string} id    Task id
+ * @param  {string} token Session token
+ * @return {Promise}
+ */
+const destroyTask = (id, token) => {
+  return new Promise((resolve, reject) => {
+    const options = {
+      headers: {
+        'x-access-token': token
+      }
+    }
+    axios.delete(`${URL}/task/destroy/${id}`, options).then((response) => {
+      resolve(response)
+    }).catch((error) => {
+      reject(error)
+    })
+  })
+}
+
 export default {
   getTasks,
-  updateTask
+  updateTask,
+  destroyTask
 }

@@ -323,5 +323,24 @@ module.exports = function (app) {
     qrSVG.pipe(res)
   })
 
+  /**
+   * Delete a task by id
+   * @type {[type]}
+   */
+  routes.delete('/task/destroy/:id', async (req, res, next) => {
+    let id = req.params.id
+
+    try {
+      await app.schemas.Task.remove({_id: id})
+    } catch (e) {
+      e.status = 500
+      return next(e)
+    }
+
+    let response = responses.success
+    response.messages = `Task ${id} deleted`
+    return res.json(response)
+  })
+
   return routes
 }
