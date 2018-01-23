@@ -25,6 +25,14 @@ const mutations = {
         break
       }
     }
+  },
+  /**
+   * Add a task to the start of the array of tasks in the store
+   * @param {store} state
+   * @param {Task} payload Task to be added
+   */
+  addTask (state, payload) {
+    state.tasks.unshift(payload)
   }
 }
 

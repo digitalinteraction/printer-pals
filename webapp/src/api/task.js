@@ -24,6 +24,30 @@ const getTasks = (token) => {
 }
 
 /**
+ * Create a task
+ * @param  {string} title       Task title
+ * @param  {string} description Task description
+ * @param  {string]} token      Session token
+ * @return {Promise}
+ */
+const createTask = (title, description, token) => {
+  return new Promise((resolve, reject) => {
+    const payload = {
+      token,
+      title,
+      description,
+      mediaType: 'image',
+      filePath: ''
+    }
+    axios.post(`${URL}/task/create`, payload).then((response) => {
+      resolve(response)
+    }).catch((error) => {
+      reject(error)
+    })
+  })
+}
+
+/**
  * Update a task remotely
  * @param  {string} id          task id
  * @param  {string} title       new title
@@ -70,6 +94,7 @@ const destroyTask = (id, token) => {
 
 export default {
   getTasks,
+  createTask,
   updateTask,
   destroyTask
 }

@@ -2,11 +2,16 @@
   <div id="all-tasks">
     <section class="section">
       <div class="container">
-        <!-- <div class="columns">
-          <div class="column is-two-fifths"> -->
-            <task v-for="task in tasks" :task="task" :key="task._id"></task>
-          <!-- </div> -->
-        <!-- </div> -->
+        <div id="new-task-container">
+          <a class="button is-rounded">
+            <span class="icon">
+              <i class="fa fa-plus"></i>
+            </span>
+            <span>New Task</span>
+          </a>
+          <new-task></new-task>
+        </div>
+        <task v-for="task in tasks" :task="task" :key="task._id"></task>
       </div>
     </section>
   </div>
@@ -14,11 +19,13 @@
 
 <script>
 import Task from './Task.vue'
+import NewTask from './NewTask.vue'
 import api from './../../api'
 export default {
   name: 'AllTasks',
   components: {
-    Task
+    Task,
+    NewTask
   },
   data () {
     return {
@@ -44,5 +51,10 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+ .button {
+   span {
+     padding-right: 4px;
+   }
+ }
 </style>

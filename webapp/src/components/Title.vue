@@ -19,7 +19,7 @@ export default {
 
 <style lang="scss">
   .title {
-    font-size: 3em;
+    font-size: 2.5em;
   }
   .subtitle {
     font-size: 2em;
