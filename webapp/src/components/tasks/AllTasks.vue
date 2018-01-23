@@ -2,11 +2,11 @@
   <div id="all-tasks">
     <section class="section">
       <div class="container">
-        <div class="columns">
-          <div class="column is-half">
-            <task v-for="task in tasks" :task="task"></task>
-          </div>
-        </div>
+        <!-- <div class="columns">
+          <div class="column is-two-fifths"> -->
+            <task v-for="task in tasks" :task="task" :key="task._id"></task>
+          <!-- </div> -->
+        <!-- </div> -->
       </div>
     </section>
   </div>
@@ -26,7 +26,7 @@ export default {
   },
   computed: {
     tasks () {
-        return this.$store.getters.getTasks
+      return this.$store.getters.getTasks
     }
   },
   async mounted () {

@@ -1,6 +1,7 @@
 //
 import axios from 'axios'
-const URL = 'http://localhost:8888/api'
+import commons from './../commons'
+const URL = commons.URL
 
 /**
  * Get all of the user's uploaded tasks

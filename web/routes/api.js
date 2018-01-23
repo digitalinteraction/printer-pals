@@ -206,7 +206,7 @@ module.exports = function (app) {
    */
   routes.post('/task/create', async (req, res, next) => {
     // populate task details from request body
-    const { title, mediaType, filePath } = req.body
+    const { title, mediaType, filePath, description } = req.body
 
     // store task
     let task
@@ -215,7 +215,8 @@ module.exports = function (app) {
         userId: req.user.id,
         title,
         mediaType,
-        filePath
+        filePath,
+        description
       })
     } catch (e) {
       e.status = 500

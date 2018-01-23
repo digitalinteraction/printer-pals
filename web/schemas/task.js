@@ -22,6 +22,9 @@ let taskModel = {
   },
   filePath: {
     type: 'String'
+  },
+  description: {
+    type: 'String'
   }
 }
 
