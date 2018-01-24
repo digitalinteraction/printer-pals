@@ -17,7 +17,30 @@
             </div>
           </div>
 
-          <input type="file" name="file" @change="assignFile($event)">
+          <div class="file has-name">
+            <label class="file-label">
+              <input class="file-input" type="file" name="file" @change="assignFile($event)">
+              <span class="file-cta">
+                <span class="file-label">
+                  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                    <defs></defs>
+                    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linejoin="round">
+                      <g id="Artboard-4" transform="translate(-752.000000, -115.000000)" stroke="#333333" stroke-width="2">
+                        <g id="17" transform="translate(752.000000, 115.000000)">
+                            <path d="M5,5.00087166 L5,18.9991283 C5,20.1073512 5.89622639,21 7.00247329,21 L16.9975267,21 C18.0978553,21 19,20.1021477 19,18.9975267 L19,8 L19,7.58542907 L18.7066753,7.29246203 L14.7017925,3.29246203 L14.4089735,3 L13.9951172,3 L6.9964216,3 C5.89821103,3 5,3.89808444 5,5.00087166 Z" id="Rectangle-410"></path>
+                            <polyline id="Path-25" stroke-linecap="round" points="12 6 12 10 16 10"></polyline>
+                        </g>
+                      </g>
+                    </g>
+                  </svg>
+                  Choose a file…
+                </span>
+              </span>
+              <span class="file-name" v-show="hasFile">
+                {{ filename }}
+              </span>
+            </label>
+          </div>
 
           <div class="control">
             <button class="button is-primary" @click="createTask">Save</button>
@@ -87,7 +110,8 @@ export default {
     return {
       title: '',
       description: '',
-      file: null
+      file: null,
+      filename: ''
     }
   },
   computed: {
@@ -96,6 +120,9 @@ export default {
     },
     hasTitle () {
       return this.title.length > 0
+    },
+    hasFile () {
+      return this.filename.length > 0
     }
   },
   methods: {
@@ -125,11 +152,12 @@ export default {
 
       this.$store.commit('addTask', task)
 
-      // this.title = ''
-      // this.description = ''
+      this.title = ''
+      this.description = ''
     },
     assignFile (event) {
       this.file = event.target.files[0]
+      this.filename = this.file.name
     }
   }
 }
@@ -148,5 +176,8 @@ export default {
   }
   .title {
       padding-left: 1.5%;
+  }
+  .file {
+    margin-bottom: 2%;
   }
 </style>

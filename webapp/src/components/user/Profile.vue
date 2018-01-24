@@ -17,20 +17,16 @@ export default {
 
 <style lang="scss">
 @keyframes wave {
-    from {
-      transform: rotate(10deg);
-    }
-    to {
-      transform: rotate(-10deg);
-    }
+  from {
+    transform: rotate(10deg);
+  }
+  to {
+    transform: rotate(-10deg);
+  }
 }
 .hand {
   display: inline-block;
-  // transform: rotate(20deg);
   animation: wave 0.3s ease-in-out infinite;
   animation-direction: alternate;
-  // animation-name: wave;
-  // animation-duration: 0.5s;
-  // animation-iteration-count: infinite;
 }
 </style>
