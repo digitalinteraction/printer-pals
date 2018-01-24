@@ -4,9 +4,6 @@
       <div class="container">
         <div id="new-task-container">
           <a class="button is-rounded" @click="toggleIsAddingNew" v-bind:class="{'is-primary': isAddingNew}">
-            <span class="icon">
-              <i class="fa fa-plus"></i>
-            </span>
             <span>New Task</span>
           </a>
           <new-task v-if="isAddingNew"></new-task>

@@ -17,6 +17,8 @@
             </div>
           </div>
 
+          <input type="file" name="file" @change="assignFile($event)">
+
           <div class="control">
             <button class="button is-primary" @click="createTask">Save</button>
           </div>
@@ -84,7 +86,8 @@ export default {
   data () {
     return {
       title: '',
-      description: ''
+      description: '',
+      file: null
     }
   },
   computed: {
@@ -100,7 +103,7 @@ export default {
      * Create and store a task remotely
      * @return {void}
      */
-    createTask: async function () {
+    async createTask () {
       let response
 
       try {
@@ -110,10 +113,23 @@ export default {
       }
 
       const task = response.data.payload.task
+
+      // Upload the file
+      if (this.file) {
+        try {
+          response = await api.task.uploadMedia(this.task, this.file, this.$cookie.get('token'))
+        } catch (e) {
+          console.error(e)
+        }
+      }
+
       this.$store.commit('addTask', task)
 
-      this.title = ''
-      this.description = ''
+      // this.title = ''
+      // this.description = ''
+    },
+    assignFile (event) {
+      this.file = event.target.files[0]
     }
   }
 }

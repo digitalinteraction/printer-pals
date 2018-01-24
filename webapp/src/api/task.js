@@ -92,9 +92,38 @@ const destroyTask = (id, token) => {
   })
 }
 
+/**
+ * Upload media to attach to a task.
+ * @param  {Object} task  Task to attach the media to
+ * @param  {[type]} file  File from form submissions
+ * @param  {[type]} token Session token
+ * @return {Promise}
+ */
+const uploadMedia = (task, file, token) => {
+  return new Promise((resolve, reject) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('tokenId', token._id)
+
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data',
+        'x-access-token': token
+      }
+    }
+
+    axios.post(`${commons.URL}/media/upload`, formData, config).then((response) => {
+      resolve(response)
+    }).catch((error) => {
+      reject(error)
+    })
+  })
+}
+
 export default {
   getTasks,
   createTask,
   updateTask,
-  destroyTask
+  destroyTask,
+  uploadMedia
 }

@@ -16,10 +16,7 @@ const authMiddleware = require('./../middleware/authenticate')
 const qr = require('qr-image')
 let responses = require('./../response')
 
-let upload = multer({ dest: 'uploads/' })
-let last = {}
-
-const filepath = path.join(__dirname, '/../uploads/last_file')
+let upload = multer({ dest: './../uploads/' })
 
 module.exports = function (app) {
   let routes = new express.Router()
@@ -85,20 +82,6 @@ module.exports = function (app) {
     let response = responses.success
     response.payload = { user, token }
     return res.json(response)
-  })
-
-  /**
-   * Upload a file
-   * @type {[type]}
-   */
-  routes.post('/upload', upload.single('myfile'), async (req, res, next) => {
-    last.mimetype = req.file.mimetype
-
-    fs.unlink(filepath, () => {
-      fs.rename(req.file.path, filepath)
-    })
-
-    res.redirect('/')
   })
 
   /**
@@ -340,6 +323,39 @@ module.exports = function (app) {
     let response = responses.success
     response.messages = `Task ${id} deleted`
     return res.json(response)
+  })
+
+  /**
+   * Upload a file
+   * @type {[type]}
+   */
+  routes.post('/media/upload', upload.single('file'), async (req, res, next) => {
+    const mimetype = req.file.mimetype
+    const ext = mimetype.split('/')[1]
+
+    // console.log(req.body.task)
+    console.log(mimetype)
+
+    const filepath = path.join(__dirname, `/../${req.file.path}.${ext}`)
+    console.log(filepath)
+
+    // fs.writeFile(filepath, '', function (err) {
+    //   if (err) {
+    //     return next(err)
+    //   }
+    //
+    //   console.log('The file was created!')
+    // })
+
+    try {
+      fs.unlink(filepath, async () => {
+        await fs.rename(req.file.path, filepath)
+      })
+    } catch (e) {
+      return next(e)
+    }
+
+    res.json(responses.success)
   })
 
   return routes

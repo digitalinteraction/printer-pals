@@ -68,9 +68,6 @@
             <button class="button is-primary" @click="updateTask">Update</button>
           </div>
         </div>
-        <div class="spinner" v-else>
-          <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
-        </div>
       </div>
     </div>
   </div>
@@ -111,11 +108,9 @@ export default {
     updateTask: async function () {
       this.isBusy = true
 
-      let response
-
       try {
         // Probably should be an object rather than a load of parameters but whatevs
-        response = await api.task.updateTask(this.task._id, this.task.title, this.task.description, this.$cookie.get('token'))
+        await api.task.updateTask(this.task._id, this.task.title, this.task.description, this.$cookie.get('token'))
       } catch (e) {
         console.log(e)
         alert('Sorry, the task could not be updated.')
@@ -130,21 +125,18 @@ export default {
      */
     deleteTask: async function () {
       // Confirm before commiting a destructive action
-      const confirmed = confirm("Are you sure you want to delete this task?")
+      const confirmed = confirm('Are you sure you want to delete this task?')
 
       // Exit if not confirmed
-      if(!confirmed) return
-
-      let response
+      if (!confirmed) return
 
       try {
-        response = await api.task.destroyTask(this.task._id, this.$cookie.get('token'))
+        await api.task.destroyTask(this.task._id, this.$cookie.get('token'))
+        // Update store with new tasks
+        this.$store.commit('removeTask', this.task._id)
       } catch (e) {
         console.log(e)
       }
-
-      // Update store with new tasks
-      this.$store.commit('removeTask', this.task._id)
     }
   }
 }
