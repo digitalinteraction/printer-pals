@@ -16,11 +16,10 @@ let taskModel = {
     type: 'String',
     required: true
   },
-  mediaType: {
-    type: 'String',
-    required: true
+  mimetype: {
+    type: 'String'
   },
-  filePath: {
+  path: {
     type: 'String'
   },
   description: {

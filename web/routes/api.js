@@ -189,7 +189,7 @@ module.exports = function (app) {
    */
   routes.post('/task/create', async (req, res, next) => {
     // populate task details from request body
-    const { title, mediaType, filePath, description } = req.body
+    const { title, description } = req.body
 
     // store task
     let task
@@ -197,8 +197,6 @@ module.exports = function (app) {
       task = await app.schemas.Task.create({
         userId: req.user.id,
         title,
-        mediaType,
-        filePath,
         description
       })
     } catch (e) {
@@ -333,19 +331,7 @@ module.exports = function (app) {
     const mimetype = req.file.mimetype
     const ext = mimetype.split('/')[1]
 
-    // console.log(req.body.task)
-    console.log(mimetype)
-
     const filepath = path.join(__dirname, `/../${req.file.path}.${ext}`)
-    console.log(filepath)
-
-    // fs.writeFile(filepath, '', function (err) {
-    //   if (err) {
-    //     return next(err)
-    //   }
-    //
-    //   console.log('The file was created!')
-    // })
 
     try {
       fs.unlink(filepath, async () => {
@@ -355,7 +341,22 @@ module.exports = function (app) {
       return next(e)
     }
 
-    res.json(responses.success)
+    const taskId = req.headers['task-id']
+    let task
+
+    try {
+      task = await app.schemas.Task.update({_id: taskId}, {$set: {
+        mimetype: mimetype,
+        path: filepath
+      }})
+    } catch (e) {
+      e.status = 500
+      return next(e)
+    }
+
+    let repsonse = responses.success
+    responses.payload = task
+    res.json(repsonse)
   })
 
   return routes

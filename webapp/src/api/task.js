@@ -103,12 +103,13 @@ const uploadMedia = (task, file, token) => {
   return new Promise((resolve, reject) => {
     const formData = new FormData()
     formData.append('file', file)
-    formData.append('tokenId', token._id)
+    // formData.append('task', task)
 
     const config = {
       headers: {
         'content-type': 'multipart/form-data',
-        'x-access-token': token
+        'x-access-token': token,
+        'task-id': task._id
       }
     }
 

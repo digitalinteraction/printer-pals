@@ -140,11 +140,12 @@ export default {
       }
 
       const task = response.data.payload.task
+      console.log(task)
 
       // Upload the file
       if (this.file) {
         try {
-          response = await api.task.uploadMedia(this.task, this.file, this.$cookie.get('token'))
+          response = await api.task.uploadMedia(task, this.file, this.$cookie.get('token'))
         } catch (e) {
           console.error(e)
         }
