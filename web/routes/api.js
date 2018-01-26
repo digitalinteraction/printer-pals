@@ -311,6 +311,26 @@ module.exports = function (app) {
   routes.delete('/task/destroy/:id', async (req, res, next) => {
     let id = req.params.id
 
+    let task
+
+    try {
+      task = await app.schemas.Task.findOne({_id: id})
+    } catch (e) {
+      return next(e)
+    }
+
+    if (task.path) {
+      fs.stat(path.join('', task.path), function (err, stats) {
+        if (err) {
+          return next(err)
+        }
+
+        fs.unlink(path.join('', task.path), function (err) {
+          if (err) return next(err)
+        })
+      })
+    }
+
     try {
       await app.schemas.Task.remove({_id: id})
     } catch (e) {

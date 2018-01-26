@@ -151,11 +151,11 @@ export default {
     if (this.task.mimetype) {
       switch (this.task.mimetype.split('/')[0]) {
         case 'audio':
-          tag.text = 'Sound'
+          tag.text = 'Sound 🎵'
           tag.colour = '#23d160'
           break
         case 'image':
-          tag.text = 'Image'
+          tag.text = 'Image  📷'
           tag.colour = '#209cee'
           break
         default:
