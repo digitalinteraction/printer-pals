@@ -52,10 +52,21 @@
               <span class="tag is-info">Draft</span>
             </div>
             <div class="card-content">
-              <div class="container">
+              <!-- <div class="container">
                 <p class="title">
                   {{ title }}
                 </p>
+              </div> -->
+              <div class="columns is-mobile">
+                <div class="column is-two-thirds">
+                  <p class="title">
+                    {{ title }}
+                  </p>
+                </div>
+                <div class="column" style="text-align: right;">
+                  <span class="tag" :style="{'background-color': tag.colour}">{{ tag.text }}</span>
+                  <span class="tag" style="background-color: #666666;">Draft</span>
+                </div>
               </div>
               <img :src="dummyQRURL" class="qr-code"/>
             </div>
@@ -111,7 +122,8 @@ export default {
       title: '',
       description: '',
       file: null,
-      filename: ''
+      filename: '',
+      mimetype: ''
     }
   },
   computed: {
@@ -123,6 +135,31 @@ export default {
     },
     hasFile () {
       return this.filename.length > 0
+    },
+    tag () {
+      let tag = {}
+
+      if (this.mimetype || this.mimetype.length > 0) {
+        switch (this.mimetype.split('/')[0]) {
+          case 'audio':
+            tag.text = 'Sound'
+            tag.colour = '#23d160'
+            break
+          case 'image':
+            tag.text = 'Image'
+            tag.colour = '#209cee'
+            break
+          default:
+            tag.text = 'Unkown'
+            tag.colour = '#363636'
+        }
+      } else {
+        tag = {
+          text: 'No Media',
+          colour: '#ff3860'
+        }
+      }
+      return tag
     }
   },
   methods: {
@@ -140,7 +177,6 @@ export default {
       }
 
       const task = response.data.payload.task
-      console.log(task)
 
       // Upload the file
       if (this.file) {
@@ -151,14 +187,18 @@ export default {
         }
       }
 
+      task.mimetype = this.mimetype
+
       this.$store.commit('addTask', task)
 
       this.title = ''
       this.description = ''
+      this.filename = ''
     },
     assignFile (event) {
       this.file = event.target.files[0]
       this.filename = this.file.name
+      this.mimetype = this.file.type
     }
   }
 }
@@ -180,5 +220,10 @@ export default {
   }
   .file {
     margin-bottom: 2%;
+  }
+  .tag {
+    margin: 1.5%;
+    font-size: 1em;
+    color: white;
   }
 </style>

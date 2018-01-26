@@ -334,8 +334,8 @@ module.exports = function (app) {
     const filepath = path.join(__dirname, `/../${req.file.path}.${ext}`)
 
     try {
-      fs.unlink(filepath, async () => {
-        await fs.rename(req.file.path, filepath)
+      await fs.unlink(filepath, () => {
+        fs.rename(req.file.path, filepath)
       })
     } catch (e) {
       return next(e)

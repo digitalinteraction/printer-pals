@@ -103,7 +103,6 @@ const uploadMedia = (task, file, token) => {
   return new Promise((resolve, reject) => {
     const formData = new FormData()
     formData.append('file', file)
-    // formData.append('task', task)
 
     const config = {
       headers: {

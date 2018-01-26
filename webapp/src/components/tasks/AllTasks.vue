@@ -2,13 +2,20 @@
   <div id="all-tasks">
     <section class="section">
       <div class="container">
-        <div id="new-task-container">
+        <div class="new-task-container">
           <a class="button is-rounded" @click="toggleIsAddingNew" v-bind:class="{'is-primary': isAddingNew}">
             <span>New Task</span>
           </a>
-          <new-task v-if="isAddingNew"></new-task>
+          <new-task class="new-task" v-if="isAddingNew"></new-task>
         </div>
-        <task v-for="task in tasks" :task="task" :key="task._id"></task>
+        <div class="all-tasks" v-if="hasTasks">
+          <task v-for="task in tasks" :task="task" :key="task._id"></task>
+        </div>
+        <div class="no-tasks" v-else>
+          <div class="container">
+            <h1 class="is-size-4">You have no tasks yet, please add a new one!</h1>
+          </div>
+        </div>
       </div>
     </section>
   </div>
@@ -32,6 +39,9 @@ export default {
   computed: {
     tasks () {
       return this.$store.getters.getTasks
+    },
+    hasTasks () {
+      return this.$store.getters.getTasks.length > 0
     }
   },
   async mounted () {
@@ -60,6 +70,7 @@ section {
   padding-top: 0;
 }
  .button {
+   transition: all ease 0.5s;
    span {
      padding-right: 4px;
    }
@@ -68,4 +79,11 @@ section {
  .isAddingNew {
    background-color: red;
  }
+
+ .no-tasks {
+   h1 {
+     margin-top: 1%;
+   }
+ }
+
 </style>

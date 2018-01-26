@@ -4,10 +4,15 @@
       <div class="column is-two-fifths">
         <div class="card">
           <div class="card-content">
-            <div class="container">
-              <p class="title">
-                {{ title }}
-              </p>
+            <div class="columns is-mobile">
+              <div class="column is-two-thirds">
+                <p class="title">
+                  {{ title }}
+                </p>
+              </div>
+              <div class="column" style="text-align: right;">
+                <span class="tag" :style="{'background-color': tag.colour}">{{ tag.text }}</span>
+              </div>
             </div>
             <img :src="url" class="qr-code"/>
           </div>
@@ -82,7 +87,8 @@ export default {
   data () {
     return {
       isEditing: false,
-      isBusy: false
+      isBusy: false,
+      tag: {}
     }
   },
   computed: {
@@ -138,6 +144,32 @@ export default {
         console.log(e)
       }
     }
+  },
+  mounted () {
+    let tag = {}
+
+    if (this.task.mimetype) {
+      switch (this.task.mimetype.split('/')[0]) {
+        case 'audio':
+          tag.text = 'Sound'
+          tag.colour = '#23d160'
+          break
+        case 'image':
+          tag.text = 'Image'
+          tag.colour = '#209cee'
+          break
+        default:
+          tag.text = 'Unkown'
+          tag.colour = '#363636'
+      }
+    } else {
+      tag = {
+        text: 'No Media',
+        colour: '#ff3860'
+      }
+    }
+
+    this.tag = tag
   }
 }
 </script>
@@ -172,5 +204,10 @@ svg {
   text-align: center;
   padding-top: 5%;
   color: #00d1b2;
+}
+.tag {
+  margin: 1.5%;
+  font-size: 1em;
+  color: white;
 }
 </style>
