@@ -93,6 +93,27 @@ const destroyTask = (id, token) => {
 }
 
 /**
+ * Print a task
+ * @param  {[type]} id
+ * @param  {[type]} token
+ * @return {[type]}
+ */
+const printTask = (id, token) => {
+  return new Promise((resolve, reject) => {
+    const options = {
+      headers: {
+        'x-access-token': token
+      }
+    }
+    axios.get(`${URL}/task/print/${id}`, options).then((response) => {
+      resolve(response)
+    }).catch((error) => {
+      reject(error)
+    })
+  })
+}
+
+/**
  * Upload media to attach to a task.
  * @param  {Object} task  Task to attach the media to
  * @param  {[type]} file  File from form submissions
@@ -125,5 +146,6 @@ export default {
   createTask,
   updateTask,
   destroyTask,
+  printTask,
   uploadMedia
 }

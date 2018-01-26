@@ -343,6 +343,24 @@ module.exports = function (app) {
     return res.json(response)
   })
 
+  routes.get('/task/print/:id', async (req, res, next) => {
+    let id = req.params.id
+
+    let task
+    try {
+      task = await app.schemas.Task.findOne({_id: id})
+    } catch (e) {
+      return next(e)
+    }
+
+    // TODO print the task!
+    console.log(task)
+
+    let response = responses.success
+    response.messages = 'Printing your task!'
+    return res.json(response)
+  })
+
   /**
    * Upload a file
    * @type {[type]}
