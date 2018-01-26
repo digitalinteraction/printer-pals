@@ -52,11 +52,6 @@
               <span class="tag is-info">Draft</span>
             </div>
             <div class="card-content">
-              <!-- <div class="container">
-                <p class="title">
-                  {{ title }}
-                </p>
-              </div> -->
               <div class="columns is-mobile">
                 <div class="column is-two-thirds">
                   <p class="title">
@@ -168,6 +163,10 @@ export default {
      * @return {void}
      */
     async createTask () {
+      if (this.title === '' || this.description === '' || this.file === undefined) {
+        alert('A task needs a title, description, and a file.')
+        return
+      }
       let response
 
       try {
@@ -197,8 +196,15 @@ export default {
     },
     assignFile (event) {
       this.file = event.target.files[0]
-      this.filename = this.file.name
-      this.mimetype = this.file.type
+      if (/audio/.test(this.file.type) || /image/.test(this.file.type)) {
+        this.filename = this.file.name
+        this.mimetype = this.file.type
+      } else {
+        this.file = null
+        this.filename = ''
+        this.mimetype = ''
+        alert ('You can only upload images and sounds.')
+      }
     }
   }
 }
