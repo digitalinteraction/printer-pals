@@ -1,4 +1,7 @@
 #!/bin/bash
+mkdir uploads
+chmod 775 uploads
+
 npm install
 
 npm --prefix ./webapp install ./webapp
