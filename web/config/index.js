@@ -14,7 +14,7 @@ require('dotenv').config()
 
 const app = express()
 
-app.use('/static', express.static(path.join(__dirname, '/../static')))
+app.use('/static', express.static(path.join(__dirname, '/../../webapp/dist/static')))
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({

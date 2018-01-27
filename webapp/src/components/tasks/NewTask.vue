@@ -48,11 +48,20 @@
         </div>
         <div class="dummy-card" v-if="hasTitle">
           <div class="card">
-            <div class="card-header">
-              <span class="tag is-info">Draft</span>
-            </div>
             <div class="card-content">
-              <div class="columns is-mobile">
+              <div class="container">
+                <span class="tag" :style="{'background-color': tag.colour}">{{ tag.text }}</span>
+                <span class="tag" style="background-color: #666666;">Draft</span>
+                <p class="title">
+                  {{ title }}
+                </p>
+              </div>
+              <div class="container">
+                <p>
+                  {{ description }}
+                </p>
+              </div>
+              <!-- <div class="columns is-mobile">
                 <div class="column is-two-thirds">
                   <p class="title">
                     {{ title }}
@@ -63,7 +72,7 @@
                   <span class="tag" style="background-color: #666666;">Draft</span>
                 </div>
               </div>
-              <img :src="dummyQRURL" class="qr-code"/>
+              <img :src="dummyQRURL" class="qr-code"/> -->
             </div>
             <footer class="card-footer">
               <!-- Icons from: https://robbiepearce.com/softies/ -->
@@ -94,6 +103,24 @@
                               <path d="M7,20.0000003 L7,16 L17.8893663,5.11063365 C19.0596382,3.94036178 20.9543008,3.94158745 22.1210495,5.11320627 L21.8872816,4.87846259 C23.0541037,6.05015528 23.044079,7.95592095 21.8823924,9.11760756 L11,20.0000003 L7,20.0000003 Z" id="Path-74" stroke-linecap="round" stroke-linejoin="round"></path>
                               <path d="M16.5,6.5 L20.5,10.5" id="Path-75"></path>
                               <path d="M1,20 L4,20" id="Path-78" stroke-linecap="round" stroke-linejoin="round"></path>
+                          </g>
+                      </g>
+                  </g>
+                </svg>
+              </p>
+              <p class="card-footer-item">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                  <defs></defs>
+                  <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                      <g id="Artboard-4" transform="translate(-136.000000, -335.000000)">
+                          <g id="103" transform="translate(136.000000, 335.000000)">
+                              <path d="M6.01757812,18 L4.99596383,18 C3.89362344,18 3,17.1125667 3,16.000385 L3,9.99961498 L3,9.99961498 C3,8.89525812 3.8926228,8 4.99508929,8 L19.0049107,8 C20.1067681,8 21,8.88743329 21,9.99961498 L21,16.000385 C21,17.1047419 20.1024307,18 18.9913592,18 L18.0616455,18" id="Rectangle-250" stroke="#333333" stroke-width="2"></path>
+                              <path d="M6,3.99980749 C6,3.44762906 6.45576096,3 7.00247329,3 L16.9975267,3 C17.5511774,3 18,3.44371665 18,3.99980749 L18,8 L6,8 L6,3.99980749 Z" id="Rectangle-53" stroke="#333333" stroke-width="2"></path>
+                              <path d="M6,14 L18,14 L18,19.9970707 C18,20.5509732 17.544239,21 16.9975267,21 L7.00247329,21 C6.44882258,21 6,20.5621186 6,19.9970707 L6,14 Z" id="Rectangle-53" stroke="#333333" stroke-width="2"></path>
+                              <rect id="Rectangle-54" fill="#333333" x="9" y="16" width="6" height="1"></rect>
+                              <rect id="Rectangle-54" fill="#333333" x="9" y="18" width="6" height="1"></rect>
+                              <circle id="Oval-32" fill="#333333" opacity="0.5" cx="7" cy="11" r="1"></circle>
+                              <circle id="Oval-32" fill="#333333" opacity="0.5" cx="10" cy="11" r="1"></circle>
                           </g>
                       </g>
                   </g>
@@ -203,7 +230,7 @@ export default {
         this.file = null
         this.filename = ''
         this.mimetype = ''
-        alert ('You can only upload images and sounds.')
+        alert('You can only upload images and sounds.')
       }
     }
   }
@@ -222,14 +249,15 @@ export default {
     }
   }
   .title {
-      padding-left: 1.5%;
+    margin-top: 5px;
+      // padding-left: 1.5%;
   }
   .file {
     margin-bottom: 2%;
   }
   .tag {
-    margin: 1.5%;
-    font-size: 1em;
+    // margin: 1.5%;
+    // font-size: 1em;
     color: white;
   }
 </style>

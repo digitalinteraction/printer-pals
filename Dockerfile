@@ -27,6 +27,12 @@ COPY ./app.js /app/app.js
 RUN mkdir uploads
 
 
+COPY ./webapp /app/webapp
+RUN rm -r /app/webapp/node_modules
+RUN npm --prefix ./webapp install ./webapp
+RUN npm --prefix ./webapp run build
+
+
 # Expose port 8888
 EXPOSE 8888
 

@@ -6,12 +6,13 @@
  */
 
 const express = require('express')
+const path = require('path')
 
 module.exports = function (app) {
   let routes = new express.Router()
 
   routes.get('/', async function (req, res, next) {
-    return res.render('./../views/index.html')
+    return res.render(path.join(__dirname, '/../../webapp/dist/index.html'))
   })
 
   return routes
