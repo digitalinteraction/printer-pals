@@ -9,6 +9,7 @@ const SerialPort = require('serialport')
 const Printer = require('thermalprinter')
 const jimp = require('jimp')
 const path = require('path')
+const fs = require('fs')
 
 // Set the port and baudrate for the printer - should default to /dev/serial0 and 19200
 const loc = '/dev/serial0'
@@ -17,10 +18,47 @@ const baudrate = 19200
 module.exports = {
   /**
    * Print an image-task on a thermal printer.
-   * @param  {Task} task The image task to be printed
-   * @return {void}
+   * @param  {Object} task The image task to be printed
+   * @return {Promise} promise to print task
    */
   printImage: (task) => {
+    // Create a serial port with the location and baudrate of the printer
+    const port = new SerialPort(loc, {baudRate: baudrate})
+
+    return new Promise((resolve, reject) => {
+      // When a connection to the port opens
+      port.on('open', () => {
+        // Create a new printer
+        const printer = new Printer(port)
+        // Print a horizontal line
+        printer.horizontalLine(32)
+          // Typefacing and text options
+          .printImage(task.path)
+          .horizontalLine(32)
+          .bold(true)
+          .inverse(true)
+          .printLine(task.title)
+          .bold(false)
+          .inverse(false)
+          .printLine(task.description)
+          .horizontalLine(32)
+          .printLine('\n\n\n')
+
+          // Actually print
+          .print((err) => {
+            if (err) reject(err)
+            resolve()
+          })
+      })
+    })
+  },
+
+  /**
+   * Print a sound task
+   * @param  {Object} task task to be printed
+   * @return {Promise} promise to print task
+   */
+  printSound: (task) => {
     // Create a serial port with the location and baudrate of the printer
     const port = new SerialPort(loc, {baudRate: baudrate})
 
@@ -37,9 +75,10 @@ module.exports = {
           .printLine(task.title)
           .bold(false)
           .inverse(false)
-          .printImage(task.path)
-          .horizontalLine(32)
           .printLine(task.description)
+          .horizontalLine(32)
+          .printLine('\n\n\n')
+
           // Actually print
           .print((err) => {
             if (err) reject(err)
@@ -65,20 +104,31 @@ module.exports = {
 
     // Return a promise of processing the image
     return new Promise((resolve, reject) => {
-      // Read in the image
-      jimp.read(path.join(__dirname, `/${filepath}`)).then(function (image) {
-        // Rotate the image if landscape
-        if (image.bitmap.height < image.bitmap.width) {
-          image.rotate(rotateAngle)
+      // Check to see if the prepared image already exists
+      fs.stat(preparedPath, (err, stat) => {
+        if (err === null) {
+          // File exists - return path to file
+          resolve(preparedPath)
+        } else if (err.code === 'ENOENT') {
+          // file does not exist - generate prepared image
+          // Read in the image
+          jimp.read(path.join(__dirname, `/${filepath}`)).then(function (image) {
+            // Rotate the image if landscape
+            if (image.bitmap.height < image.bitmap.width) {
+              image.rotate(rotateAngle)
+            }
+            image.resize(maxHeight, jimp.AUTO) // resize the image
+              .quality(60) // set jpeg quality to 60%
+              .greyscale() // greyscale image
+              .write(preparedPath) // write new image to file
+            resolve(preparedPath) // return the path to prepared image
+          }).catch(function (err) {
+            console.log(err)
+            reject(err)
+          })
+        } else {
+          reject(err)
         }
-        image.resize(maxHeight, jimp.AUTO) // resize the image
-          .quality(60) // set jpeg quality to 60%
-          .greyscale() // greyscale image
-          .write(preparedPath) // write new image to file
-        resolve(preparedPath) // return the path to prepared image
-      }).catch(function (err) {
-        console.log(err)
-        reject(err)
       })
     })
   }
