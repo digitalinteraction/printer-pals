@@ -2,3 +2,4 @@
 .env
 uploads
 webapp/node_modules
+printer/printer-ready/*.jpg
