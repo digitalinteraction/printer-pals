@@ -29,7 +29,13 @@ module.exports = {
       // When a connection to the port opens
       port.on('open', () => {
         // Create a new printer
-        const printer = new Printer(port)
+        var opts = {
+          maxPrintingDots: 15,
+          heatingTime: 150,
+          heatingInterval: 4,
+          commandDelay: 5
+        }
+        const printer = new Printer(port, opts)
         // Print a horizontal line
         printer.horizontalLine(32)
           // Typefacing and text options
