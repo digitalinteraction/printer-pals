@@ -8,6 +8,7 @@ services:
         - "./web:/app/web"
         - "./app.js:/app/app.js"
         - "./.env:/app/.env"
+        - "./printer:/app/printer"
         depends_on:
           - mongo
         links:

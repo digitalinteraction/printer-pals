@@ -2,6 +2,17 @@
 FROM node:alpine
 
 
+# Install python for serial ports - linux-headers needed for serialport
+RUN apk add --update \
+    python \
+    python-dev \
+    py-pip \
+    build-base \
+    ghc \
+    linux-headers \
+  && pip install virtualenv \
+  && rm -rf /var/cache/apk/*
+
 # Make an app directory to hold the server files.
 RUN mkdir /app
 
@@ -31,6 +42,9 @@ COPY ./webapp /app/webapp
 RUN rm -r /app/webapp/node_modules
 RUN npm --prefix ./webapp install ./webapp
 RUN npm --prefix ./webapp run build
+
+
+COPY ./printer /app/printer
 
 
 # Expose port 8888

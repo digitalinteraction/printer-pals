@@ -14,8 +14,9 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config()
 const authMiddleware = require('./../middleware/authenticate')
 const qr = require('qr-image')
-let responses = require('./../response')
+const printer = require('./../../printer/print.js')
 
+let responses = require('./../response')
 let upload = multer({ dest: './../uploads/' })
 
 module.exports = function (app) {
@@ -342,7 +343,10 @@ module.exports = function (app) {
     response.messages = `Task ${id} deleted`
     return res.json(response)
   })
-
+  /**
+   * Print a task by its id.
+   * @type {[type]}
+   */
   routes.get('/task/print/:id', async (req, res, next) => {
     let id = req.params.id
 
@@ -355,6 +359,9 @@ module.exports = function (app) {
 
     // TODO print the task!
     console.log(task)
+    if (/image/.test(task.mimetype)) {
+      printer.printImageTask(task)
+    }
 
     let response = responses.success
     response.messages = 'Printing your task!'
