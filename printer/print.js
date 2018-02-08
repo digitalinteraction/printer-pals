@@ -28,8 +28,11 @@ module.exports = {
     return new Promise((resolve, reject) => {
       // When a connection to the port opens
       port.on('open', () => {
+        const options = {
+          maxPrintingDots: 13
+        }
         // Create a new printer
-        const printer = new Printer(port)
+        const printer = new Printer(port, options)
         // Print a horizontal line
         printer.horizontalLine(32)
           // Typefacing and text options
@@ -90,68 +93,44 @@ module.exports = {
 
   /**
    * Prepare an image for printing
-   * must be greyscale and less than 384px in width.
-   * @param  {String} path path to image
-   * @return {void}
+   * @param  {Object} task The task that needs preparing
+   * @return {Promise}     A promise to prepare the image
    */
-  printImageTask: (task) => {
-    const rotateAngle = 90
-    const maxHeight = 384
+  prepareImage: (task) => {
+    return new Promise((resolve, reject) => {
+      const rotateAngle = 90
+      const maxHeight = 384
 
-    // Get the filename and extension
-    const filename = task.path.split('/')[task.path.split('/').length - 1]
-    const preparedPath = path.join(__dirname, `/printer-ready/${filename}`)
+      // Get the filename and extension
+      const filename = task.path.split('/')[task.path.split('/').length - 1]
+      const preparedPath = path.join(__dirname, `/printer-ready/${filename}`)
 
-    // Return a promise of processing the image
-    // return new Promise((resolve, reject) => {
-    // Check to see if the prepared image already exists
-    fs.stat(preparedPath, (err, stat) => {
-      if (err === null) {
-        // File exists - return path to file
-        return err
-      } else if (err.code === 'ENOENT') {
-        // file does not exist - generate prepared image
-        // Read in the image
-        jimp.read(task.path).then(function (image) {
-          // Rotate the image if landscape
-          if (image.bitmap.height < image.bitmap.width) {
-            image.rotate(rotateAngle)
-          }
-          image.resize(maxHeight, jimp.AUTO) // resize the image
-            .quality(60) // set jpeg quality to 60%
-            .greyscale() // greyscale image
-            .write(preparedPath) // write new image to file
-        }).then(() => {
-          // Create a serial port with the location and baudrate of the printer
-          const port = new SerialPort(loc, {baudRate: baudrate})
+      // Return a promise of processing the image
+      // return new Promise((resolve, reject) => {
+      // Check to see if the prepared image already exists
+      fs.stat(preparedPath, (err, stat) => {
+        if (err === null) {
+          // File exists - return path to file
+          reject(err)
+        } else if (err.code === 'ENOENT') {
+          // file does not exist - generate prepared image
+          // Read in the image
+          jimp.read(task.path).then((image) => {
+            // Rotate the image if landscape
+            if (image.bitmap.height < image.bitmap.width) {
+              image.rotate(rotateAngle)
+            }
+            image.resize(maxHeight, jimp.AUTO) // resize the image
+              .quality(80) // set jpeg quality to 80%
+              .greyscale() // greyscale image
+              .write(preparedPath) // write new image to file
 
-          // When a connection to the port opens
-          port.on('open', () => {
-            // Create a new printer
-            const printer = new Printer(port)
-            // Print a horizontal line
-            printer.horizontalLine(32)
-              // Typefacing and text options
-              .printImage(preparedPath)
-              .horizontalLine(32)
-              .bold(true)
-              .inverse(true)
-              .printLine(task.title)
-              .bold(false)
-              .inverse(false)
-              .printLine(task.description)
-              .horizontalLine(32)
-              .printLine('\n\n\n')
-
-              // Actually print
-              .print((err) => {
-                if (err) return err
-              })
+            resolve(preparedPath)
           })
-        })
-      } else {
-        return err
-      }
+        } else {
+          reject(err)
+        }
+      })
     })
   }
 }
