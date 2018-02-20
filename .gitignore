@@ -3,3 +3,5 @@
 uploads
 webapp/node_modules
 printer/printer-ready/*.jpg
+printer/printer-ready/*.png
+.idea
