@@ -2,7 +2,7 @@
 
 printf "\033[1;31mUpdating and upgrading packages\033[0m\n"
 # Check for and install updates
-apt-get update && apt-get upgrade
+apt-get update -y && apt-get upgrade -y
 
 ########################################################################################################################
 ### Install Node ###
@@ -18,6 +18,7 @@ mkdir -p /usr/lib/nodejs
 
 # Extract and move to /usr/lib
 tar -xJvf node-v8.9.4-linux-armv7l.tar.xz -C /usr/lib/nodejs
+rm -r node-v8.9.4-linux-armv7l.tar.xz
 
 # Move to NodeJS path
 mv /usr/lib/nodejs/node-v8.9.4-armv7l /usr/lib/nodejs/node-v8.9.4
@@ -43,13 +44,14 @@ wget https://github.com/SUMGlobal/rpi-mongodb/raw/master/mongo3-2/mongo
 wget https://github.com/SUMGlobal/rpi-mongodb/raw/master/mongo3-2/mongod
 
 # Move into a new folder and make executable
-mkdir -p mongo-3.2
-mv mongo /mongo-3.2
-mv mongod /mongo-3.2
-chmod +x mongo-3.2/*
+mkdir -p ~/mongo-3.2
+mv mongo ~/mongo-3.2/mongo
+mv mongod ~/mongo-3.2/mongod
+chmod +x -R ~/mongo-3.2/*
 
 # Move to bin
-cp -R /mongo-3.2/* /usr/bin/
+cp -R ~/mongo-3.2/* /usr/bin/
+rm -r ~/mongo-3.2
 
 # Create data folder
 mkdir -p ~/data/db
@@ -77,3 +79,7 @@ npm --prefix ./webapp install ./webapp
 
 # Build vue project
 npm --prefix ./webapp run build
+
+# Check versions are correct
+printf "\033[1;31mChecking mongo and node versions\033[0m\n"
+mongo --version && mongod -v | grep "db version" && node -v && npm -v
