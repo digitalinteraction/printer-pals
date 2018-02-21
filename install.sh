@@ -13,19 +13,9 @@ printf "\033[1;31mInstalling NodeJS-v8.9.4-arm7vl\033[0m\n"
 # Download node 8.9.4
 wget https://nodejs.org/dist/v8.9.4/node-v8.9.4-linux-armv7l.tar.xz
 
-# Make NodeJS folder if it doesn't already exists
-mkdir -p /usr/lib/nodejs
-
-# Extract and move to /usr/lib
-tar -xJvf node-v8.9.4-linux-armv7l.tar.xz -C /usr/lib/nodejs
-rm -r node-v8.9.4-linux-armv7l.tar.xz
-
-# Move to NodeJS path
-mv /usr/lib/nodejs/node-v8.9.4-armv7l /usr/lib/nodejs/node-v8.9.4
-
-# Copy and reload bash_profile
-cp ./.profile ~/.profile
-. ~/.profile
+# Extract and move to /usr/local
+tar -xJvf node-v8.9.4-linux-armv7l.tar.xz
+cp -R node-v8.9.4-armv7l/* /usr/local
 
 # Check versions
 npm -v
