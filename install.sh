@@ -15,7 +15,7 @@ wget https://nodejs.org/dist/v8.9.4/node-v8.9.4-linux-armv7l.tar.xz
 
 # Extract and move to /usr/local
 tar -xJvf node-v8.9.4-linux-armv7l.tar.xz
-cp -R node-v8.9.4-armv7l/* /usr/local
+cp -R node-v8.9.4-linux-armv7l/* /usr/local
 
 # Check versions
 npm -v
