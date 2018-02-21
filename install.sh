@@ -16,6 +16,7 @@ wget https://nodejs.org/dist/v8.9.4/node-v8.9.4-linux-armv7l.tar.xz
 # Extract and move to /usr/local
 tar -xJvf node-v8.9.4-linux-armv7l.tar.xz
 cp -R node-v8.9.4-linux-armv7l/* /usr/local
+rm -r node-*
 
 # Check versions
 npm -v
@@ -60,12 +61,12 @@ mkdir -p uploads
 chmod 775 uploads
 
 # Install web dependencies
-npm install
+npm install --unsafe-perm
 
 npm install -g nodemon
 
 # Install vue dependencies
-npm --prefix ./webapp install ./webapp
+npm --prefix ./webapp install --unsafe-perm ./webapp
 
 # Build vue project
 npm --prefix ./webapp run build
