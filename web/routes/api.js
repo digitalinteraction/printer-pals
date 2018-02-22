@@ -293,13 +293,13 @@ module.exports = function (app) {
     let id = req.params.id
 
     // set file type
-    const fileType = 'svg'
+    const fileType = 'png'
 
     // generate qr code as svg
     const qrSVG = qr.image(`task:${id}`, { type: fileType })
 
     // set headers
-    res.setHeader('Content-Type', 'image/svg+xml')
+    res.setHeader('Content-Type', 'image/png')
 
     // pipe qr code into the response
     qrSVG.pipe(res)

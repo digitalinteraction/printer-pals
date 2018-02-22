@@ -10,6 +10,7 @@ const Printer = require('thermalprinter') // controlling the thermal printer
 const jimp = require('jimp') // image editing
 const path = require('path')
 const fs = require('fs')
+const qr = require('qr-image') // creating qr-codes
 
 // Set the port and baudrate for the printer - should default to /dev/serial0 and 19200
 const loc = '/dev/serial0'
@@ -21,9 +22,10 @@ module.exports = {
    * @param  {Object} task The image task to be printed
    * @return {Promise} promise to print task
    */
-  printImage: (task) => {
+  printImage: async (task) => {
     // Create a serial port with the location and baudrate of the printer
     const port = new SerialPort(loc, {baudRate: baudrate})
+    const qrPath = await this.createTaskQRCode(task)
 
     return new Promise((resolve, reject) => {
       // When a connection to the port opens
@@ -45,6 +47,7 @@ module.exports = {
           .inverse(false)
           .printLine(task.description)
           .horizontalLine(32)
+          .printImage(path.join(__dirname, `/${qrPath}`))
           .printLine('\n\n\n')
 
           // Actually print
@@ -61,9 +64,10 @@ module.exports = {
    * @param  {Object} task task to be printed
    * @return {Promise} promise to print task
    */
-  printSound: (task) => {
+  printSound: async (task) => {
     // Create a serial port with the location and baudrate of the printer
     const port = new SerialPort(loc, {baudRate: baudrate})
+    const qrPath = await this.createTaskQRCode(task)
 
     return new Promise((resolve, reject) => {
       // When a connection to the port opens
@@ -80,6 +84,7 @@ module.exports = {
           .inverse(false)
           .printLine(task.description)
           .horizontalLine(32)
+          .printImage(path.join(__dirname, `/${qrPath}`))
           .printLine('\n\n\n')
 
           // Actually print
@@ -131,6 +136,29 @@ module.exports = {
           reject(err)
         }
       })
+    })
+  },
+
+  /**
+   * Create a QR code for a task
+   * @param task
+   * @returns {Promise<any>}
+   */
+  createTaskQRCode: async (task) => {
+    return new Promise((resolve, reject) => {
+      // set file type
+      const fileType = 'png'
+      const qrName = 'qr.png'
+
+      try {
+        // generate qr code as svg
+        const qrSVG = qr.image(`task:${task.id}`, { type: fileType })
+        qrSVG.pipe(fs.createWriteStream(qrName))
+      } catch (e) {
+        reject(e)
+      }
+
+      resolve(qrName)
     })
   }
 }

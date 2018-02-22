@@ -40,7 +40,28 @@ pi@raspberrypi: ~ $
 ```
 You can start typing in your commands here.
 
-### 2. Setting up the WiFi
+### 2. Enabling Camera and Serial Modules
+We need to ensure printer-pals can access the camera and the printer over
+a serial connection. To do this we need to edit the Raspberry Pi's
+settings to enable the modules. Type the command below to bring up the
+settings menu:
+```bash
+sudo raspi-config
+```
+From the menu select option `5. Interfacing Options`, then select `P1
+Camera`, then `Yes`, then `Ok`. The camera is now enabled. To enable
+serial connections select `5. Interfacing Options`, then `P6 Serial`,
+then `No`, then `Yes`, then `Ok`. The Pi should now be able to
+interface with the printer.
+
+After this select finish, you should be prompted to reboot the Pi, but
+if this dialog box does not appear enter the command below to restart
+the Pi.
+```bash
+sudo shutdown -r now
+```
+
+### 3. Setting up the WiFi
 To connect to the router we need to edit the file the Raspberry uses to
 store it's WiFi connections. To do this run the command
 ```
@@ -74,7 +95,7 @@ sudo shutdown -r now
 ```
 The Pi should restart and automatically connect to the router.
 
-### 3. Downloading Printer-Pals
+### 4. Downloading Printer-Pals
 After connecting the Pi to WiFi, we can download printer-pals to the Pi
 so that we can begin installing the dependencies needed for it run
 properly. To download the project run the command:
@@ -88,7 +109,7 @@ with the project inside. The second command will then change our working
 directory to the project we just downloaded so we can continue setting
 up the project.
 
-### 4. Installing Dependencies
+### 5. Installing Dependencies
 Now the Pi is connected to the internet we can install all of the
 dependencies and libraries printer-pals needs to run. This can be done
 with the command:
@@ -108,7 +129,7 @@ MongoDB shell version: 3.2.15
 
 ```
 
-### 5. Setting Printer-Pals to Start Automatically
+### 6. Setting Printer-Pals to Start Automatically
 To set the Pi to run printer-pals at boot we need to tell it to run a
 script every time it turns on. Enter the command:
 ```bash
@@ -117,7 +138,7 @@ sudo cat run.sh > /etc/rc.local
 This will override the usual scripts the Raspberry Pi runs at boot with
 a script we can use to manually start printer-pals.
 
-### 6. Setting Printer-Pals Environment Variables
+### 7. Setting Printer-Pals Environment Variables
 We need to tell printer-pals what credentials and passwords it needs to
 connect to the database, and what it can use to seed session tokens when
 people log into the webapp. To do this enter:
@@ -137,7 +158,7 @@ SALT_ROUNDS=10
 APP_SECRET=random_secret_string
 ```
 
-### 7. Running Printer Pals
+### 8. Running Printer Pals
 Now that everything is installed we can run printer pals using the
 command:
 ```bash

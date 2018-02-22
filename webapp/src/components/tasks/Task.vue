@@ -19,7 +19,7 @@
           </div>
           <footer class="card-footer">
             <!-- Icons from: https://robbiepearce.com/softies/ -->
-            <p class="card-footer-item" @click="printTask">
+            <p class="card-footer-item" @click="deleteTask">
               <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                 <defs></defs>
                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
