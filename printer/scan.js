@@ -3,7 +3,10 @@
  Date: 19/02/18
  Author: Daniel Welsh
  */
-
+const path = require('path')
+require('dotenv').config({
+  path: path.join(__dirname, '/../.env')
+})
 const Raspistill = require('node-raspistill').Raspistill // Take a photo using the camera module
 const camera = new Raspistill({
   time: 1, // Set timeout between photos to 1 second
@@ -18,7 +21,11 @@ let db = {} // Database object adapter connects to
 let isPrinting = false // Flag to skip printing if the printer is busy
 
 // Connect to mongo
-mongoose.connect(process.env.MONGO_URI)
+try {
+  mongoose.connect(process.env.MONGO_URI)
+} catch (e) {
+  console.error(e)
+}
 
 /**
  * When a connection to the database is open assign the schemas to db.
