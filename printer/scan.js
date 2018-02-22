@@ -5,7 +5,10 @@
  */
 
 const Raspistill = require('node-raspistill').Raspistill // Take a photo using the camera module
-const camera = new Raspistill()
+const camera = new Raspistill({
+  time: 1, // Set timeout between photos to 1 second
+  noFileSave: true // Pass image directly as a buffer
+})
 const Jimp = require('jimp') // Javascript image processing
 const QrCode = require('qrcode-reader') // Read QR codes
 const qr = new QrCode() // New instance of a QR code
