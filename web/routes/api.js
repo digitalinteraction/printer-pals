@@ -363,7 +363,8 @@ module.exports = function (app) {
     if (/image/.test(task.mimetype)) { // Check if the task is an image
       printer.prepareImage(task).then((path) => {
         console.log('path ', path)
-        printer.printImage(path).then(() => {
+        task.path = path
+        printer.printImage(task).then(() => {
           console.log(`Printed task: ${task._id}`)
         }).catch((err) => {
           console.error(err)

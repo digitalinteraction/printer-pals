@@ -3,6 +3,7 @@
  Author:   Daniel Welsh
  Description:
     Functions for printing tasks to a thermal printer
+    TODO: Fix QR Code
  */
 
 const SerialPort = require('serialport') // connecting to a serial port
@@ -25,7 +26,7 @@ module.exports = {
   printImage: async (task) => {
     // Create a serial port with the location and baudrate of the printer
     const port = new SerialPort(loc, {baudRate: baudrate})
-    const qrPath = await this.createTaskQRCode(task)
+    // const qrPath = await this.createTaskQRCode(task)
 
     return new Promise((resolve, reject) => {
       // When a connection to the port opens
@@ -47,7 +48,7 @@ module.exports = {
           .inverse(false)
           .printLine(task.description)
           .horizontalLine(32)
-          .printImage(path.join(__dirname, `/${qrPath}`))
+          // .printImage(path.join(__dirname, `/${qrPath}`))
           .printLine('\n\n\n')
 
           // Actually print
@@ -116,7 +117,7 @@ module.exports = {
       fs.stat(preparedPath, (err, stat) => {
         if (err === null) {
           // File exists - return path to file
-          reject(err)
+          resolve(preparedPath)
         } else if (err.code === 'ENOENT') {
           // file does not exist - generate prepared image
           // Read in the image
@@ -144,7 +145,7 @@ module.exports = {
    * @param task
    * @returns {Promise<any>}
    */
-  createTaskQRCode: async (task) => {
+  createTaskQRCode: (task) => {
     return new Promise((resolve, reject) => {
       // set file type
       const fileType = 'png'
