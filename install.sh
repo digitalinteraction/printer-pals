@@ -66,7 +66,7 @@ npm install --unsafe-perm
 npm install -g nodemon
 
 # Install vue dependencies
-npm --prefix ./webapp install --unsafe-perm ./webapp
+npm --prefix ./webapp install --unsafe-perm=true ./webapp
 
 # Build vue project
 npm --prefix ./webapp run build
