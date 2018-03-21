@@ -8,9 +8,12 @@
  */
 
 const fs = require('fs')
+const jimp = require('jimp') // image editing
 // const QrCode = require('qrcode-reader') // Read QR codes
 const qrImage = require('qr-image')
 // const qr = new QrCode() // New instance of a QR code
+
+const MAX_HEIGHT = 384
 
 module.exports = {
   /**
@@ -33,7 +36,15 @@ module.exports = {
         reject(e)
       }
 
-      resolve(qrName)
+      // Read in the image
+      jimp.read(qrName).then((image) => {
+        image.resize(MAX_HEIGHT, jimp.AUTO) // resize the image
+          .quality(100) // set jpeg quality to 80%
+          // .greyscale() // greyscale image
+          .write(qrName) // write new image to file
+
+        resolve(qrName)
+      })
     })
   }
 }
