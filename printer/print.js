@@ -14,7 +14,7 @@ const fs = require('fs')
 const qrUtils = require('./qrcode')
 
 // Set the port and baudrate for the printer - should default to /dev/serial0 and 19200
-const loc = '/dev/serial1'
+const loc = '/dev/serial0'
 const baudrate = 19200
 
 module.exports = {
