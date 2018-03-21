@@ -23,12 +23,15 @@ module.exports = {
    * @param  {Object} task The image task to be printed
    * @return {Promise} promise to print task
    */
-  printImage: async (task) => {
-    // Create a serial port with the location and baudrate of the printer
-    const port = new SerialPort(loc, {baudRate: baudrate})
-    const qrPath = await qrUtils.generateQR(`task:${task._id}`)
+  printImage: (task) => {
+    return new Promise(async (resolve, reject) => {
+      const qrPath = await qrUtils.generateQR(`task:${task._id}`)
+      // Create a serial port with the location and baudrate of the printer
+      const port = new SerialPort(loc, {
+        baudRate: baudrate,
+        autoOpen: false
+      })
 
-    return new Promise((resolve, reject) => {
       // When a connection to the port opens
       port.on('open', () => {
         const options = {
@@ -57,6 +60,8 @@ module.exports = {
             resolve()
           })
       })
+
+      port.open()
     })
   },
 
