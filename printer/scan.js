@@ -17,6 +17,7 @@ const QrCode = require('qrcode-reader') // Read QR codes
 const qr = new QrCode() // New instance of a QR code
 const mongoose = require('mongoose') // MongoDB adapter
 const schemas = require('./../web/schemas') // Schemas for adapter
+const printer = require('./print')
 let db = {} // Database object adapter connects to
 let isPrinting = false // Flag to skip printing if the printer is busy
 
@@ -67,11 +68,36 @@ qr.callback = async function (err, value) {
     console.error(e)
   }
 
-  // If the task exists, print it.
-  // TODO: Print the task.
-  if (task) {
-    isPrinting = true
-    console.log(task)
+  if (!isPrinting) {
+    // If the task exists, print it.
+    // TODO: Print the task.
+    if (task) {
+      isPrinting = true
+
+      if (/image/.test(task.mimetype)) { // Check if the task is an image
+        printer.prepareImage(task).then((path) => {
+          console.log('path ', path)
+          task.path = path
+          printer.printImage(task).then(() => {
+            console.log(`Printed task: ${task._id}`)
+            isPrinting = false
+          }).catch((err) => {
+            console.error(err)
+          })
+        }).catch((err) => {
+          console.error(err)
+        })
+      } else if (/audio/.test(task.mimetype)) { // check if the task is a sound
+        // Print the task and play the file
+        printer.printSound(task).then(() => {
+          console.log('printing sound task')
+        }).catch((err) => {
+          console.error(err)
+        })
+      } else {
+        console.log('unknown mimetype')
+      }
+    }
   }
 }
 

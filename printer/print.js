@@ -11,7 +11,7 @@ const Printer = require('thermalprinter') // controlling the thermal printer
 const jimp = require('jimp') // image editing
 const path = require('path')
 const fs = require('fs')
-const qr = require('qr-image') // creating qr-codes
+const qrUtils = require('./qrcode')
 
 // Set the port and baudrate for the printer - should default to /dev/serial0 and 19200
 const loc = '/dev/serial1'
@@ -26,7 +26,7 @@ module.exports = {
   printImage: async (task) => {
     // Create a serial port with the location and baudrate of the printer
     const port = new SerialPort(loc, {baudRate: baudrate})
-    // const qrPath = await this.createTaskQRCode(task)
+    const qrPath = await qrUtils.generateQR(`task:${task._id}`)
 
     return new Promise((resolve, reject) => {
       // When a connection to the port opens
@@ -48,7 +48,7 @@ module.exports = {
           .inverse(false)
           .printLine(task.description)
           .horizontalLine(32)
-          // .printImage(path.join(__dirname, `/${qrPath}`))
+          .printImage(path.join(__dirname, `/${qrPath}`))
           .printLine('\n\n\n')
 
           // Actually print
@@ -68,7 +68,7 @@ module.exports = {
   printSound: async (task) => {
     // Create a serial port with the location and baudrate of the printer
     const port = new SerialPort(loc, {baudRate: baudrate})
-    const qrPath = await this.createTaskQRCode(task)
+    const qrPath = await qrUtils.generateQR(`task:${task._id}`)
 
     return new Promise((resolve, reject) => {
       // When a connection to the port opens
@@ -137,29 +137,6 @@ module.exports = {
           reject(err)
         }
       })
-    })
-  },
-
-  /**
-   * Create a QR code for a task
-   * @param task
-   * @returns {Promise<any>}
-   */
-  createTaskQRCode: (task) => {
-    return new Promise((resolve, reject) => {
-      // set file type
-      const fileType = 'png'
-      const qrName = 'qr.png'
-
-      try {
-        // generate qr code as svg
-        const qrSVG = qr.image(`task:${task.id}`, { type: fileType })
-        qrSVG.pipe(fs.createWriteStream(qrName))
-      } catch (e) {
-        reject(e)
-      }
-
-      resolve(qrName)
     })
   }
 }
