@@ -357,16 +357,20 @@ module.exports = function (app) {
       return next(e)
     }
 
+    console.log('task ', task)
+
     // Should print the task asynchronously
     if (/image/.test(task.mimetype)) { // Check if the task is an image
       printer.prepareImage(task).then((path) => {
-        printer.printImage(path).then(() => {
+        console.log('path ', path)
+        task.path = path
+        printer.printImage(task).then(() => {
           console.log(`Printed task: ${task._id}`)
         }).catch((err) => {
           console.error(err)
         })
       }).catch((err) => {
-        console.err(err)
+        console.error(err)
       })
     } else if (/audio/.test(task.mimetype)) { // check if the task is a sound
       // Print the task and play the file
