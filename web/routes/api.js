@@ -15,6 +15,7 @@ require('dotenv').config()
 const authMiddleware = require('./../middleware/authenticate')
 const qr = require('qr-image')
 const printer = require('./../../printer/print.js')
+const audio = require('./../../audio')
 
 let responses = require('./../response')
 let upload = multer({ dest: './../uploads/' })
@@ -293,13 +294,13 @@ module.exports = function (app) {
     let id = req.params.id
 
     // set file type
-    const fileType = 'svg'
+    const fileType = 'png'
 
     // generate qr code as svg
     const qrSVG = qr.image(`task:${id}`, { type: fileType })
 
     // set headers
-    res.setHeader('Content-Type', 'image/svg+xml')
+    res.setHeader('Content-Type', 'image/png')
 
     // pipe qr code into the response
     qrSVG.pipe(res)
@@ -357,24 +358,39 @@ module.exports = function (app) {
       return next(e)
     }
 
+    console.log('task ', task)
+
     // Should print the task asynchronously
     if (/image/.test(task.mimetype)) { // Check if the task is an image
-      printer.prepareImage(task).then((path) => {
-        printer.printImage(path).then(() => {
-          console.log(`Printed task: ${task._id}`)
-        }).catch((err) => {
-          console.error(err)
-        })
-      }).catch((err) => {
-        console.err(err)
-      })
+      console.log('printing image task')
+      let path = ''
+      try {
+        path = await printer.prepareImage(task)
+        task.path = path
+      } catch (e) {
+        return next(e)
+      }
+
+      try {
+        await printer.printImage(task)
+      } catch (e) {
+        return next(e)
+      }
     } else if (/audio/.test(task.mimetype)) { // check if the task is a sound
-      // Print the task and play the file
-      printer.printSound(task).then(() => {
-        console.log('printing sound task')
-      }).catch((err) => {
-        console.error(err)
-      })
+      // Print the task and play the files
+      console.log('printing sounds')
+
+      try {
+        printer.printSound(task)
+      } catch (e) {
+        return next(e)
+      }
+
+      try {
+        audio.playSoundTask(task)
+      } catch (e) {
+        return next(e)
+      }
     } else {
       console.log('unknown mimetype')
     }

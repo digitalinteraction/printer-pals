@@ -10,6 +10,7 @@ RUN apk add --update \
     build-base \
     ghc \
     linux-headers \
+    libasound2-dev \
   && pip install virtualenv \
   && rm -rf /var/cache/apk/*
 
@@ -36,6 +37,7 @@ COPY ./web /app/web
 COPY ./.env /app/.env
 COPY ./app.js /app/app.js
 RUN mkdir uploads
+RUN mkdir -p printer/qr-codes
 
 
 COPY ./webapp /app/webapp

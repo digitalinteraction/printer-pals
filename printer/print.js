@@ -3,6 +3,7 @@
  Author:   Daniel Welsh
  Description:
     Functions for printing tasks to a thermal printer
+    TODO: Fix QR Code
  */
 
 const SerialPort = require('serialport') // connecting to a serial port
@@ -10,6 +11,7 @@ const Printer = require('thermalprinter') // controlling the thermal printer
 const jimp = require('jimp') // image editing
 const path = require('path')
 const fs = require('fs')
+const qrUtils = require('./qrcode')
 
 // Set the port and baudrate for the printer - should default to /dev/serial0 and 19200
 const loc = '/dev/serial0'
@@ -22,27 +24,31 @@ module.exports = {
    * @return {Promise} promise to print task
    */
   printImage: (task) => {
-    // Create a serial port with the location and baudrate of the printer
-    const port = new SerialPort(loc, {baudRate: baudrate})
+    return new Promise(async (resolve, reject) => {
+      // Get QR Code
+      const fileName = await qrUtils.saveTaskQRToFile(task)
 
-    return new Promise((resolve, reject) => {
+      // Create a serial port with the location and baudrate of the printer
+      const port = new SerialPort(loc, {
+        baudRate: baudrate,
+        autoOpen: false
+      })
+
       // When a connection to the port opens
       port.on('open', () => {
         const options = {
-          maxPrintingDots: 13
+          maxPrintingDots: 10
         }
         // Create a new printer
         const printer = new Printer(port, options)
         // Print a horizontal line
         printer.horizontalLine(32)
           // Typefacing and text options
+          .printLine('\r\n')
+          .printImage(path.join(__dirname, `./${fileName}`))
           .printImage(task.path)
           .horizontalLine(32)
-          .bold(true)
-          .inverse(true)
           .printLine(task.title)
-          .bold(false)
-          .inverse(false)
           .printLine(task.description)
           .horizontalLine(32)
           .printLine('\n\n\n')
@@ -50,9 +56,18 @@ module.exports = {
           // Actually print
           .print((err) => {
             if (err) reject(err)
-            resolve()
           })
       })
+
+      port.on('close', () => {
+        resolve()
+      })
+
+      port.on('error', (e) => {
+        reject(e)
+      })
+
+      port.open()
     })
   },
 
@@ -62,10 +77,15 @@ module.exports = {
    * @return {Promise} promise to print task
    */
   printSound: (task) => {
-    // Create a serial port with the location and baudrate of the printer
-    const port = new SerialPort(loc, {baudRate: baudrate})
+    return new Promise(async (resolve, reject) => {
+      const fileName = await qrUtils.saveTaskQRToFile(task)
+      console.log(fileName)
+      // Create a serial port with the location and baudrate of the printer
+      const port = new SerialPort(loc, {
+        baudRate: baudrate,
+        autoOpen: false
+      })
 
-    return new Promise((resolve, reject) => {
       // When a connection to the port opens
       port.on('open', () => {
         // Create a new printer
@@ -73,11 +93,9 @@ module.exports = {
         // Print a horizontal line
         printer.horizontalLine(32)
           // Typefacing and text options
-          .bold(true)
-          .inverse(true)
+          .printLine('\r\n')
+          .printImage(path.join(__dirname, `/${fileName}`))
           .printLine(task.title)
-          .bold(false)
-          .inverse(false)
           .printLine(task.description)
           .horizontalLine(32)
           .printLine('\n\n\n')
@@ -85,9 +103,18 @@ module.exports = {
           // Actually print
           .print((err) => {
             if (err) reject(err)
-            resolve()
           })
       })
+
+      port.on('close', () => {
+        resolve()
+      })
+
+      port.on('error', (e) => {
+        reject(e)
+      })
+
+      port.open()
     })
   },
 
@@ -111,7 +138,7 @@ module.exports = {
       fs.stat(preparedPath, (err, stat) => {
         if (err === null) {
           // File exists - return path to file
-          reject(err)
+          resolve(preparedPath)
         } else if (err.code === 'ENOENT') {
           // file does not exist - generate prepared image
           // Read in the image
@@ -131,6 +158,48 @@ module.exports = {
           reject(err)
         }
       })
+    })
+  },
+
+  /**
+   * Print a QR Code
+   * @param  {string} data Data to be encoded as a QR
+   * @return {Promise} Promise to print
+   */
+  printQRCode: (task) => {
+    return new Promise(async (resolve, reject) => {
+      // Get QR Code
+      const fileName = await qrUtils.saveTaskQRToFile(task)
+
+      const port = new SerialPort(loc, {
+        baudRate: baudrate,
+        autoOpen: false
+      })
+
+      // When a connection to the port opens
+      port.on('open', () => {
+        // Create a new printer
+        const printer = new Printer(port)
+        // Print a horizontal line
+        printer.printLine('\r\n')
+          .printImage(path.join(__dirname, `./${fileName}`))
+          .printLine('\n')
+
+          // Actually print
+          .print((err) => {
+            if (err) reject(err)
+          })
+      })
+
+      port.on('close', () => {
+        resolve()
+      })
+
+      port.on('error', (e) => {
+        reject(e)
+      })
+
+      port.open()
     })
   }
 }
