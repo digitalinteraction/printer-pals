@@ -15,6 +15,7 @@ require('dotenv').config()
 const authMiddleware = require('./../middleware/authenticate')
 const qr = require('qr-image')
 const printer = require('./../../printer/print.js')
+const audio = require('./../../audio')
 
 let responses = require('./../response')
 let upload = multer({ dest: './../uploads/' })
@@ -374,8 +375,9 @@ module.exports = function (app) {
       })
     } else if (/audio/.test(task.mimetype)) { // check if the task is a sound
       // Print the task and play the file
-      printer.printSound(task).then(() => {
+      printer.printSound(task).then(async () => {
         console.log('printing sound task')
+        await audio.playSoundTask(task)
       }).catch((err) => {
         console.error(err)
       })
