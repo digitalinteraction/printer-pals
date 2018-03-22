@@ -23,6 +23,7 @@ let isPrinting = false // Flag to skip printing if the printer is busy
 
 // Connect to mongo
 try {
+  console.log('Connecting to database')
   mongoose.connect(process.env.MONGO_URI)
 } catch (e) {
   console.error(e)
@@ -32,6 +33,7 @@ try {
  * When a connection to the database is open assign the schemas to db.
  */
 mongoose.connection.once('open', () => {
+  console.log('Connected to db')
   db = schemas
 })
 
@@ -42,64 +44,6 @@ mongoose.connection.once('open', () => {
 mongoose.connection.once('error', (error) => {
   console.error(error)
 })
-
-/**
- * Callback for the QR code decoder
- * - Checks the value and querys the database for a matching task.
- * @param err
- * @param value
- * @returns {Promise<void>}
- */
-qr.callback = async function (err, value) {
-  if (err) {
-    console.error(err)
-    // TODO handle error
-  }
-
-  let task
-  console.log(value.result)
-  // Get ID from the QR code should be in the `id:<task_id>` format
-  const id = value.result.split(':')[0]
-
-  // Fetch the task
-  try {
-    task = await db.schemas.Task.findOne({_id: id})
-  } catch (e) {
-    console.error(e)
-  }
-
-  if (!isPrinting) {
-    // If the task exists, print it.
-    // TODO: Print the task.
-    if (task) {
-      isPrinting = true
-
-      if (/image/.test(task.mimetype)) { // Check if the task is an image
-        printer.prepareImage(task).then((path) => {
-          console.log('path ', path)
-          task.path = path
-          printer.printImage(task).then(() => {
-            console.log(`Printed task: ${task._id}`)
-            isPrinting = false
-          }).catch((err) => {
-            console.error(err)
-          })
-        }).catch((err) => {
-          console.error(err)
-        })
-      } else if (/audio/.test(task.mimetype)) { // check if the task is a sound
-        // Print the task and play the file
-        printer.printSound(task).then(() => {
-          console.log('printing sound task')
-        }).catch((err) => {
-          console.error(err)
-        })
-      } else {
-        console.log('unknown mimetype')
-      }
-    }
-  }
-}
 
 /**
  * Decode a QR code
@@ -116,6 +60,60 @@ async function decodeQR () {
 
   camera.takePhoto().then((photo) => {
     Jimp.read(photo).then((image) => {
+      console.log('Assinging qr scanner callback')
+      qr.callback = async function (err, value) {
+        if (err) {
+          console.log('Error in scanning QR')
+          console.error(err)
+          // TODO handle error
+        }
+
+        // if (!value) return
+
+        let task
+        console.log('Printing result')
+        console.log(value.result)
+
+        // Get ID from the QR code should be in the `id:<task_id>` format
+        const id = value.result.split(':')[0]
+
+        // Fetch the task
+        try {
+          task = await db.schemas.Task.findOne({_id: id})
+        } catch (e) {
+          console.error(e)
+        }
+
+        // If the task exists, print it.
+        // TODO: Print the task.
+        if (task) {
+          isPrinting = true
+
+          if (/image/.test(task.mimetype)) { // Check if the task is an image
+            printer.prepareImage(task).then((path) => {
+              console.log('path ', path)
+              task.path = path
+              printer.printImage(task).then(() => {
+                console.log(`Printed task: ${task._id}`)
+                isPrinting = false
+              }).catch((err) => {
+                console.error(err)
+              })
+            }).catch((err) => {
+              console.error(err)
+            })
+          } else if (/audio/.test(task.mimetype)) { // check if the task is a sound
+            // Print the task and play the file
+            printer.printSound(task).then(() => {
+              console.log('printing sound task')
+            }).catch((err) => {
+              console.error(err)
+            })
+          } else {
+            console.log('unknown mimetype')
+          }
+        }
+      }
       qr.decode(image.bitmap)
     }).catch((err) => {
       console.error(err)
