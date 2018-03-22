@@ -10,6 +10,7 @@ RUN apk add --update \
     build-base \
     ghc \
     linux-headers \
+    libasound2-dev \
   && pip install virtualenv \
   && rm -rf /var/cache/apk/*
 

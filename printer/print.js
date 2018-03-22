@@ -83,6 +83,7 @@ module.exports = {
   printSound: (task) => {
     return new Promise(async (resolve, reject) => {
       const fileName = await qrUtils.saveTaskQRToFile(task)
+      console.log(fileName)
       // Create a serial port with the location and baudrate of the printer
       const port = new SerialPort(loc, {
         baudRate: baudrate,

@@ -362,25 +362,29 @@ module.exports = function (app) {
 
     // Should print the task asynchronously
     if (/image/.test(task.mimetype)) { // Check if the task is an image
-      printer.prepareImage(task).then((path) => {
-        console.log('path ', path)
+      console.log('printing image task')
+      let path = ''
+      try {
+        path = await printer.prepareImage(task)
         task.path = path
-        printer.printImage(task).then(() => {
-          console.log(`Printed task: ${task._id}`)
-        }).catch((err) => {
-          console.error(err)
-        })
-      }).catch((err) => {
-        console.error(err)
-      })
+      } catch (e) {
+        return next(e)
+      }
+
+      try {
+        await printer.printImage(task)
+      } catch (e) {
+        return next(e)
+      }
     } else if (/audio/.test(task.mimetype)) { // check if the task is a sound
-      // Print the task and play the file
-      printer.printSound(task).then(async () => {
-        console.log('printing sound task')
-        await audio.playSoundTask(task)
-      }).catch((err) => {
-        console.error(err)
-      })
+      // Print the task and play the files
+      console.log('printing sounds')
+
+      try {
+        await printer.printSound(task)
+      } catch (e) {
+        return next(e)
+      }
     } else {
       console.log('unknown mimetype')
     }
