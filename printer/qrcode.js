@@ -29,7 +29,10 @@ module.exports = {
 
       try {
         // generate qr code as svg
-        const qrSVG = qrImage.image(task._id, { type: fileType })
+        const qrSVG = qrImage.image(task._id, {
+          type: fileType,
+          ec_level: 'H'
+        })
         // const qrSVG = qr.image(data, { type: fileType })
         qrSVG.pipe(fs.createWriteStream(qrName))
       } catch (e) {

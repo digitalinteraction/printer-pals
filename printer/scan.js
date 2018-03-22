@@ -10,7 +10,8 @@ require('dotenv').config({
 const Raspistill = require('node-raspistill').Raspistill // Take a photo using the camera module
 const camera = new Raspistill({
   time: 1, // Set timeout between photos to 1 second
-  noFileSave: true // Pass image directly as a buffer
+  noFileSave: true, // Pass image directly as a buffer
+  contrast: 100
 })
 const Jimp = require('jimp') // Javascript image processing
 const QrCode = require('qrcode-reader') // Read QR codes
@@ -20,6 +21,8 @@ const schemas = require('./../web/schemas') // Schemas for adapter
 const printer = require('./print')
 let db = {} // Database object adapter connects to
 let isPrinting = false // Flag to skip printing if the printer is busy
+
+console.log()
 
 // Connect to mongo
 try {
@@ -60,6 +63,9 @@ async function decodeQR () {
 
   // camera.takePhoto().then((photo) => {
   Jimp.read(path.join(__dirname, './sample-qr.png')).then((image) => {
+    image.greyscale()
+    image.contrast(0.8)
+
     console.log('Assinging qr scanner callback')
     qr.callback = async function (err, value) {
       if (err) {
@@ -79,7 +85,7 @@ async function decodeQR () {
 
       // Fetch the task
       try {
-        task = await db.schemas.Task.findOne({_id: id})
+        task = await db.Task.findOne({_id: id})
       } catch (e) {
         console.error(e)
       }
