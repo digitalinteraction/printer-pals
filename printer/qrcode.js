@@ -25,7 +25,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       // set file type
       const fileType = 'png'
-      const qrName = `qr-${task._id}`
+      const qrName = `qr-codes/qr-${task._id}.${fileType}`
 
       try {
         // generate qr code as svg
@@ -40,10 +40,10 @@ module.exports = {
       jimp.read(qrName).then((image) => {
         image.resize(MAX_HEIGHT, jimp.AUTO) // resize the image
           .quality(100) // set jpeg quality to 80%
-          // .greyscale() // greyscale image
-          .write(qrName) // write new image to file
-
-        resolve(qrName)
+          .greyscale() // greyscale image
+          .write(qrName, () => {
+            resolve(qrName)
+          }) // write new image to file
       })
     })
   }

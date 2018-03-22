@@ -56,8 +56,15 @@ module.exports = {
           // Actually print
           .print((err) => {
             if (err) reject(err)
-            resolve()
           })
+      })
+
+      port.on('close', () => {
+        resolve()
+      })
+
+      port.on('error', (e) => {
+        reject(e)
       })
 
       port.open()
@@ -99,8 +106,15 @@ module.exports = {
           // Actually print
           .print((err) => {
             if (err) reject(err)
-            resolve()
           })
+      })
+
+      port.on('close', () => {
+        resolve()
+      })
+
+      port.on('error', (e) => {
+        reject(e)
       })
 
       port.open()
@@ -177,8 +191,15 @@ module.exports = {
           // Actually print
           .print((err) => {
             if (err) reject(err)
-            resolve()
           })
+      })
+
+      port.on('close', () => {
+        resolve()
+      })
+
+      port.on('error', (e) => {
+        reject(e)
       })
 
       port.open()
