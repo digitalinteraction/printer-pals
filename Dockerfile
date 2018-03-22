@@ -36,6 +36,7 @@ COPY ./web /app/web
 COPY ./.env /app/.env
 COPY ./app.js /app/app.js
 RUN mkdir uploads
+RUN mkdir -p printer/qr-codes
 
 
 COPY ./webapp /app/webapp
