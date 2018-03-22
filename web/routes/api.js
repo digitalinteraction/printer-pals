@@ -381,7 +381,13 @@ module.exports = function (app) {
       console.log('printing sounds')
 
       try {
-        await printer.printSound(task)
+        printer.printSound(task)
+      } catch (e) {
+        return next(e)
+      }
+
+      try {
+        audio.playSoundTask(task)
       } catch (e) {
         return next(e)
       }

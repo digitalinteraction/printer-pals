@@ -48,11 +48,7 @@ module.exports = {
           .printImage(path.join(__dirname, `./${fileName}`))
           .printImage(task.path)
           .horizontalLine(32)
-          .bold(true)
-          .inverse(true)
           .printLine(task.title)
-          .bold(false)
-          .inverse(false)
           .printLine(task.description)
           .horizontalLine(32)
           .printLine('\n\n\n')
@@ -97,14 +93,11 @@ module.exports = {
         // Print a horizontal line
         printer.horizontalLine(32)
           // Typefacing and text options
-          .bold(true)
-          .inverse(true)
+          .printLine('\r\n')
+          .printImage(path.join(__dirname, `/${fileName}`))
           .printLine(task.title)
-          .bold(false)
-          .inverse(false)
           .printLine(task.description)
           .horizontalLine(32)
-          .printImage(path.join(__dirname, `/${fileName}`))
           .printLine('\n\n\n')
 
           // Actually print
