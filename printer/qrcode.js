@@ -42,9 +42,12 @@ module.exports = {
             image.resize(MAX_HEIGHT, jimp.AUTO) // resize the image
               .quality(100) // set jpeg quality to 80%
               .greyscale() // greyscale image
-              .write(qrName, () => {
+              .write(path.join(__dirname, `./${qrName}`), () => {
                 resolve(qrName)
               }) // write new image to file
+          }).catch((e) => {
+            console.error(e)
+            reject(e)
           })
         })
 
