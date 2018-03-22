@@ -58,67 +58,67 @@ mongoose.connection.once('error', (error) => {
 async function decodeQR () {
   if (isPrinting) return
 
-  camera.takePhoto().then((photo) => {
-    Jimp.read(photo).then((image) => {
-      console.log('Assinging qr scanner callback')
-      qr.callback = async function (err, value) {
-        if (err) {
-          console.log('Error in scanning QR')
-          console.error(err)
-          // TODO handle error
-        }
+  // camera.takePhoto().then((photo) => {
+  Jimp.read(path.join(__dirname, './sample-qr.png')).then((image) => {
+    console.log('Assinging qr scanner callback')
+    qr.callback = async function (err, value) {
+      if (err) {
+        console.log('Error in scanning QR')
+        console.error(err)
+        // TODO handle error
+      }
 
-        // if (!value) return
+      // if (!value) return
 
-        let task
-        console.log('Printing result')
-        console.log(value.result)
+      let task
+      console.log('Printing result')
+      console.log(value.result)
 
-        // Get ID from the QR code should be in the `id:<task_id>` format
-        const id = value.result.split(':')[0]
+      // Get ID from the QR code should be in the `id:<task_id>` format
+      const id = value.result.split(':')[0]
 
-        // Fetch the task
-        try {
-          task = await db.schemas.Task.findOne({_id: id})
-        } catch (e) {
-          console.error(e)
-        }
+      // Fetch the task
+      try {
+        task = await db.schemas.Task.findOne({_id: id})
+      } catch (e) {
+        console.error(e)
+      }
 
-        // If the task exists, print it.
-        // TODO: Print the task.
-        if (task) {
-          isPrinting = true
+      // If the task exists, print it.
+      // TODO: Print the task.
+      if (task) {
+        isPrinting = true
 
-          if (/image/.test(task.mimetype)) { // Check if the task is an image
-            printer.prepareImage(task).then((path) => {
-              console.log('path ', path)
-              task.path = path
-              printer.printImage(task).then(() => {
-                console.log(`Printed task: ${task._id}`)
-                isPrinting = false
-              }).catch((err) => {
-                console.error(err)
-              })
+        if (/image/.test(task.mimetype)) { // Check if the task is an image
+          printer.prepareImage(task).then((path) => {
+            console.log('path ', path)
+            task.path = path
+            printer.printImage(task).then(() => {
+              console.log(`Printed task: ${task._id}`)
+              isPrinting = false
             }).catch((err) => {
               console.error(err)
             })
-          } else if (/audio/.test(task.mimetype)) { // check if the task is a sound
-            // Print the task and play the file
-            printer.printSound(task).then(() => {
-              console.log('printing sound task')
-            }).catch((err) => {
-              console.error(err)
-            })
-          } else {
-            console.log('unknown mimetype')
-          }
+          }).catch((err) => {
+            console.error(err)
+          })
+        } else if (/audio/.test(task.mimetype)) { // check if the task is a sound
+          // Print the task and play the file
+          printer.printSound(task).then(() => {
+            console.log('printing sound task')
+          }).catch((err) => {
+            console.error(err)
+          })
+        } else {
+          console.log('unknown mimetype')
         }
       }
-      qr.decode(image.bitmap)
-    }).catch((err) => {
-      console.error(err)
-    })
+    }
+    qr.decode(image.bitmap)
+  }).catch((err) => {
+    console.error(err)
   })
+  // })
 }
 
 // Run the QR code decoder once a second
