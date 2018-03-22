@@ -6,3 +6,6 @@ printer/printer-ready/*.jpg
 printer/printer-ready/*.png
 .idea
 sample_qr.jpg
+printer/printer-ready
+qr.png
+printer/qr-codes
