@@ -18,18 +18,18 @@ const MAX_HEIGHT = 384
 module.exports = {
   /**
    * Encode data as a QR Code and save to file
-   * @param  {String}  data String to encode as QR
+   * @param  {Object}  data Task to encode as QR
    * @return {Promise}      Returns a path to the QR code.
    */
-  generateQR: async (data) => {
+  saveTaskQRToFile: (task) => {
     return new Promise((resolve, reject) => {
       // set file type
       const fileType = 'png'
-      const qrName = 'qr.png'
+      const qrName = `qr-${task._id}`
 
       try {
         // generate qr code as svg
-        const qrSVG = qrImage.image(data, { type: fileType })
+        const qrSVG = qrImage.image(task._id, { type: fileType })
         // const qrSVG = qr.image(data, { type: fileType })
         qrSVG.pipe(fs.createWriteStream(qrName))
       } catch (e) {

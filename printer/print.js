@@ -25,7 +25,6 @@ module.exports = {
    */
   printImage: (task) => {
     return new Promise(async (resolve, reject) => {
-      const qrPath = await qrUtils.generateQR(`task:${task._id}`)
       // Create a serial port with the location and baudrate of the printer
       const port = new SerialPort(loc, {
         baudRate: baudrate,
@@ -42,6 +41,7 @@ module.exports = {
         // Print a horizontal line
         printer.horizontalLine(32)
           // Typefacing and text options
+          .printLine('\r\n')
           .printImage(task.path)
           .horizontalLine(32)
           .bold(true)
@@ -51,7 +51,6 @@ module.exports = {
           .inverse(false)
           .printLine(task.description)
           .horizontalLine(32)
-          .printImage(path.join(__dirname, `/${qrPath}`))
           .printLine('\n\n\n')
 
           // Actually print
@@ -70,12 +69,16 @@ module.exports = {
    * @param  {Object} task task to be printed
    * @return {Promise} promise to print task
    */
-  printSound: async (task) => {
-    // Create a serial port with the location and baudrate of the printer
-    const port = new SerialPort(loc, {baudRate: baudrate})
-    const qrPath = await qrUtils.generateQR(`task:${task._id}`)
+  printSound: (task) => {
+    return new Promise(async (resolve, reject) => {
+      // Create a serial port with the location and baudrate of the printer
+      const port = new SerialPort(loc, {
+        baudRate: baudrate,
+        autoOpen: false
+      })
 
-    return new Promise((resolve, reject) => {
+      const qrPath = await qrUtils.generateQR(`task:${task._id}`)
+
       // When a connection to the port opens
       port.on('open', () => {
         // Create a new printer
@@ -99,6 +102,8 @@ module.exports = {
             resolve()
           })
       })
+
+      port.open()
     })
   },
 
@@ -142,6 +147,41 @@ module.exports = {
           reject(err)
         }
       })
+    })
+  },
+
+  /**
+   * Print a QR Code
+   * @param  {string} data Data to be encoded as a QR
+   * @return {Promise} Promise to print
+   */
+  printQRCode: (task) => {
+    return new Promise(async (resolve, reject) => {
+      // Get QR Code
+      const fileName = await qrUtils.saveTaskQRToFile(task)
+
+      const port = new SerialPort(loc, {
+        baudRate: baudrate,
+        autoOpen: false
+      })
+
+      // When a connection to the port opens
+      port.on('open', () => {
+        // Create a new printer
+        const printer = new Printer(port)
+        // Print a horizontal line
+        printer.printLine('\r\n')
+          .printImage(path.join(__dirname, `./${fileName}`))
+          .printLine('\n')
+
+          // Actually print
+          .print((err) => {
+            if (err) reject(err)
+            resolve()
+          })
+      })
+
+      port.open()
     })
   }
 }
