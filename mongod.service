@@ -1,0 +1,8 @@
+[Unit]
+Description=Mongod service
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/mongod --storageEngine=mmapv1 --dbpath=/home/pi/data/db
+Restart=always
+User=pi
