@@ -1,0 +1,13 @@
+[Unit]
+Description=Printer Pals API
+Requires=mongod
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/nodemon app.js
+WorkingDirectory=/home/pi/printer-pals/web
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=root
+Group=root
