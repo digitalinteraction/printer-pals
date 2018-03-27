@@ -1,18 +1,19 @@
 # Download Docker image, Node.js running on Alpine
-FROM node:alpine
+FROM node:slim
 
+RUN apt-get update -y && apt-get upgrade -y
 
 # Install python for serial ports - linux-headers needed for serialport
-RUN apk add --update \
+RUN apt-get install -y \
     python \
     python-dev \
-    py-pip \
-    build-base \
+    python-pip \
+    build-essential \
     ghc \
-    linux-headers \
+    # linux-headers \
     libasound2-dev \
   && pip install virtualenv \
-  && rm -rf /var/cache/apk/*
+  && apt-get clean
 
 # Make an app directory to hold the server files.
 RUN mkdir /app
@@ -33,20 +34,20 @@ RUN npm install
 RUN npm install -g nodemon
 
 
-COPY ./web /app/web
-COPY ./.env /app/.env
-COPY ./app.js /app/app.js
+COPY ./ /app/web
+# COPY ./.env /app/.env
+# COPY ./app.js /app/app.js
 RUN mkdir uploads
 RUN mkdir -p printer/qr-codes
 
 
-COPY ./webapp /app/webapp
-RUN rm -r /app/webapp/node_modules
-RUN npm --prefix ./webapp install ./webapp
-RUN npm --prefix ./webapp run build
+# COPY ./webapp /app/webapp
+# RUN rm -r /app/webapp/node_modules
+# RUN npm --prefix ./webapp install ./webapp
+# RUN npm --prefix ./webapp run build
 
 
-COPY ./printer /app/printer
+# COPY ./printer /app/printer
 
 
 # Expose port 8888
@@ -54,4 +55,4 @@ EXPOSE 8888
 
 
 # Start the server.
-CMD nodemon /app/app.js
+CMD nodemon /app/web/app.js
