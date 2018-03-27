@@ -1,7 +1,10 @@
 [Unit]
 Description=Printer Pals API
-Requires=mongod
+Requires=mongod.service
 After=network.target
+
+[Install]
+WantedBy=multi-user.target
 
 [Service]
 ExecStart=/usr/local/bin/nodemon app.js
