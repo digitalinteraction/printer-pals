@@ -56,6 +56,7 @@ module.exports = {
           // Actually print
           .print((err) => {
             if (err) reject(err)
+            port.close()
           })
       })
 
@@ -103,6 +104,7 @@ module.exports = {
           // Actually print
           .print((err) => {
             if (err) reject(err)
+            port.close()
           })
       })
 
@@ -188,6 +190,7 @@ module.exports = {
           // Actually print
           .print((err) => {
             if (err) reject(err)
+            port.close()
           })
       })
 
