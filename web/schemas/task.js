@@ -24,6 +24,13 @@ let taskModel = {
   },
   description: {
     type: 'String'
+  },
+  public: {
+    type: 'Boolean',
+    required: true,
+    default: () => {
+      return false
+    }
   }
 }
 
