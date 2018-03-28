@@ -54,6 +54,13 @@ export default {
       console.error(e)
     }
 
+    let tempTasks = tasks
+    tasks = []
+    for (let i = 0; i < tempTasks.length; i++) {
+      if (!tempTasks[i].public) {
+        tasks.push(tempTasks[i])
+      }
+    }
     this.$store.commit('setTasks', tasks)
   },
   methods: {

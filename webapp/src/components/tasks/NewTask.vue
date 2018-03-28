@@ -59,6 +59,7 @@
               <div class="container">
                 <span class="tag" :style="{'background-color': tag.colour}">{{ tag.text }}</span>
                 <span class="tag" style="background-color: #666666;">Draft</span>
+                <span v-if="isPublic" class="tag public-tag">Public 👨‍👩‍👦‍👦</span>
                 <p class="title">
                   {{ title }}
                 </p>
@@ -211,7 +212,11 @@ export default {
 
       task.mimetype = this.mimetype
 
-      this.$store.commit('addTask', task)
+      if (task.public) {
+        this.$store.commit('addPublicTask', task)
+      } else {
+        this.$store.commit('addTask', task)
+      }
 
       this.title = ''
       this.description = ''
@@ -237,6 +242,11 @@ export default {
   #new-task {
     margin-top: 2%;
   }
+
+  .public-tag {
+    background-color: #ff3860;
+  }
+
   .card {
     margin-top: 5%;
     .card-header {
