@@ -10,7 +10,7 @@ const bodyParser = require('body-parser')
 const path = require('path')
 const cors = require('cors')
 
-require('dotenv').config()
+require('dotenv').config({path: './../.env'})
 
 const app = express()
 

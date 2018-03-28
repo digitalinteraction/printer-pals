@@ -5,7 +5,7 @@
    - Start an instance of the server.
   */
 
-const server = require('./web/server')
+const server = require('./server')
 
 async function main () {
   try {

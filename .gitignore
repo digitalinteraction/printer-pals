@@ -9,5 +9,6 @@ sample_qr.jpg
 printer/printer-ready/*.jpeg
 qr.png
 printer/qr-codes
-web/printer/printer-ready
+web/printer/printer-ready/*.png
+web/printer/printer-ready/*.jpeg
 web/printer/qr-codes
