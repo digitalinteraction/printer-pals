@@ -142,6 +142,24 @@ module.exports = function (app) {
     return res.json(response)
   })
 
+  /**
+   * Get all tasks marked with a public flag
+   * @type {Object}
+   */
+  routes.get('/task/public', async (req, res, next) => {
+    let tasks
+    try {
+      tasks = await app.schemas.Task.find({public: true})
+    } catch (e) {
+      e.status = 500
+      return next(e)
+    }
+
+    let response = responses.success
+    response.payload = {tasks}
+    return res.json(response)
+  })
+
   // **********************************************************************************
   // PROTECTED ROUTES ONLY BELOW
   // **********************************************************************************
@@ -192,6 +210,7 @@ module.exports = function (app) {
   routes.post('/task/create', async (req, res, next) => {
     // populate task details from request body
     const { title, description } = req.body
+    const isPublic = req.body.public
 
     // store task
     let task
@@ -199,7 +218,8 @@ module.exports = function (app) {
       task = await app.schemas.Task.create({
         userId: req.user.id,
         title,
-        description
+        description,
+        public: isPublic
       })
     } catch (e) {
       e.status = 500

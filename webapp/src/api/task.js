@@ -24,18 +24,33 @@ const getTasks = (token) => {
 }
 
 /**
+ * Get public tasks
+ * @return {Object[]} Public tasks
+ */
+const getPublicTasks = () => {
+  return new Promise((resolve, reject) => {
+    axios.get(`${URL}/task/public`).then((response) => {
+      resolve(response)
+    }).catch((error) => {
+      reject(error)
+    })
+  })
+}
+
+/**
  * Create a task
  * @param  {string} title       Task title
  * @param  {string} description Task description
  * @param  {string]} token      Session token
  * @return {Promise}
  */
-const createTask = (title, description, token) => {
+const createTask = (title, description, isPublic, token) => {
   return new Promise((resolve, reject) => {
     const payload = {
       token,
       title,
       description,
+      public: isPublic,
       mediaType: 'image',
       filePath: ''
     }
@@ -143,6 +158,7 @@ const uploadMedia = (task, file, token) => {
 
 export default {
   getTasks,
+  getPublicTasks,
   createTask,
   updateTask,
   destroyTask,
