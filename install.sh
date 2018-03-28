@@ -74,3 +74,14 @@ npm --prefix ./webapp run build
 # Check versions are correct
 printf "\033[1;31mChecking mongo and node versions\033[0m\n"
 mongo --version && mongod -v | grep "db version" && node -v && npm -v
+
+chmod 755 mongod.service
+chmod 755 printerpals.service
+
+cp mongod.service /etc/systemd/system/
+cp printerpals.service /etc/systemd/system/
+
+systemctl enable mongod.service
+systemctl enable printerpals.service
+
+shutdown -r now
