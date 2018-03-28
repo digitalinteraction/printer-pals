@@ -2,7 +2,7 @@
   <div id="public-tasks">
     <section class="section">
       <div class="container">
-        <div class="all-tasks" v-if="tasks.length > 0">
+        <div class="all-tasks" v-if="hasTasks">
           <task v-for="task in tasks" :task="task" :key="task._id"></task>
         </div>
         <div class="no-tasks" v-else>
@@ -24,13 +24,18 @@ export default {
     Task
   },
   data () {
-    return {
-      tasks: []
+    return {}
+  },
+  computed: {
+    tasks () {
+      return this.$store.getters.getPublicTasks
+    },
+    hasTasks () {
+      return this.$store.getters.getPublicTasks.length > 0
     }
   },
-  computed: {},
   async mounted () {
-    let tasks
+    let tasks = []
 
     try {
       let response = await api.task.getPublicTasks()
@@ -39,10 +44,7 @@ export default {
       console.error(e)
       return
     }
-
-    console.log(tasks)
-
-    this.tasks = tasks
+    this.$store.commit('setPublicTasks', tasks)
   },
   methods: {}
 }

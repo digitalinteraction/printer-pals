@@ -6,6 +6,7 @@
           <div class="card-content">
             <div class="container">
               <span class="tag" :style="{'background-color': tag.colour}">{{ tag.text }}</span>
+              <span v-if="task.public" class="tag public-tag">Public 👨‍👩‍👦‍👦</span>
               <p class="title">
                 {{ title }}
               </p>
@@ -211,6 +212,10 @@ export default {
 
 .title {
     // padding-left: 1.5%;
+}
+
+.public-tag {
+  background-color: #ff3860;
 }
 
 svg {

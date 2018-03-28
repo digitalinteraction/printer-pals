@@ -1,6 +1,7 @@
 //
 const state = {
-  tasks: []
+  tasks: [],
+  publicTasks: []
 }
 
 const mutations = {
@@ -19,10 +20,23 @@ const mutations = {
    * @return {void}
    */
   removeTask (state, payload) {
+    let task = {}
     for (let i = 0; i < state.tasks.length; i++) {
       if (state.tasks[i]._id === payload) {
+        task = state.tasks[i]._id
         state.tasks.splice(i, 1)
         break
+      }
+    }
+
+    // Check public tasks if not found
+    if (!task) {
+      for (let i = 0; i < state.publicTasks.length; i++) {
+        if (state.publicTasks[i]._id === payload) {
+          task = state.publicTasks[i]._id
+          state.publicTasks.splice(i, 1)
+          break
+        }
       }
     }
   },
@@ -33,6 +47,24 @@ const mutations = {
    */
   addTask (state, payload) {
     state.tasks.unshift(payload)
+  },
+
+  /**
+   * Set the public tasks
+   * @param {Object} state   Current state of the store
+   * @param {Object[]} payload An array of public tasks
+   */
+  setPublicTasks (state, payload) {
+    state.publicTasks = payload
+  },
+
+  /**
+   * Add a public task
+   * @param {Object} state   Current state of the store
+   * @param {Object[]} payload Public task
+   */
+  addPublicTask (state, payload) {
+    state.publicTasks.unshift(payload)
   }
 }
 
@@ -57,6 +89,33 @@ const getters = {
     for (let i = 0; i < state.tasks.length; i++) {
       if (state.tasks[i]._id === id) {
         return state.tasks[i]
+      }
+    }
+    for (let i = 0; i < state.publicTasks.length; i++) {
+      if (state.publicTasks[i]._id === id) {
+        return state.publicTasks[i]
+      }
+    }
+  },
+
+  /**
+   * Get all public tasks
+   * @param  {Object} state Current state of the store
+   * @return {Object[]}     Public Tasks
+   */
+  getPublicTasks: (state) => {
+    return state.publicTasks
+  },
+
+  /**
+   * Get a public task
+   * @param  {Object} state Current state of the store
+   * @return {Object}       Task matching given id
+   */
+  getPublicTask: (state) => (id) => {
+    for (let i = 0; i < state.publicTasks.length; i++) {
+      if (state.publicTasks[i]._id === id) {
+        return state.publicTasks[i]
       }
     }
   }
