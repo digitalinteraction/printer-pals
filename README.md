@@ -179,3 +179,17 @@ up. Do this by entering:
 ```bash
 sudo shutdown -r now
 ```
+
+## Using Printer Pals
+### 1. Setting up A Router
+Firstly, you need to setup a router, with the ssid `printer-pals`, and the password as `print`. Once this is setup plug in printer-pals and it should connect automatically.
+
+### 2. Find the Website
+Once connected to power printer-pals will begin serving a webpage which you can use to start uploading and printing media. Open a browser and navigate to:
+```bash
+http://printer
+```
+This will connect to the printer over the local network you just set up.
+
+### 3. Start Printing
+Create an account and start printing some fun tasks! 🖨

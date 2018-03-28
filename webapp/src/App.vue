@@ -4,22 +4,35 @@
 
     <title-bar></title-bar>
 
-    <div v-if="!isLoggedIn">
-      <div class="container auth-header-container">
-        <h1 class="is-size-3">
-          <span v-bind:class="{ 'active': !isRegistering }" class="auth-header" @click="toggleRegistering">Login</span>
-          <span> | </span>
-          <span v-bind:class="{ 'active': isRegistering }" class="auth-header" @click="toggleRegistering">Register</span>
-        </h1>
-      </div>
+    <div v-if="!isLoggedIn" class="">
+      <section class="section login-register-container">
+        <div class="container auth-header-container">
+          <h1 class="is-size-3">
+            <span v-bind:class="{ 'active': !isRegistering }" class="auth-header" @click="toggleRegistering">Login</span>
+            <span> | </span>
+            <span v-bind:class="{ 'active': isRegistering }" class="auth-header" @click="toggleRegistering">Register</span>
+          </h1>
+        </div>
+      </section>
 
       <login v-if="!isRegistering"></login>
       <register v-else></register>
     </div>
 
     <profile :user="user" v-else></profile>
+
+    <section class="section">
+      <h1 class="is-size-3 container">Your Tasks 🕹</h1>
+    </section>
+
     <tasks v-if="isLoggedIn"></tasks>
-    <!-- <router-view/> -->
+
+    <section class="section">
+      <h1 class="is-size-3 container">Tasks for Everyone 👨‍👩‍👦‍👦</h1>
+    </section>
+
+    <public-tasks></public-tasks>
+
   </div>
 </template>
 
@@ -31,6 +44,7 @@ import Login from './components/auth/Login.vue'
 import Register from './components/auth/Register.vue'
 import Profile from './components/user/Profile.vue'
 import Tasks from './components/tasks/AllTasks.vue'
+import PublicTasks from './components/tasks/PublicTasks.vue'
 
 // Packages
 import api from './api'
@@ -48,7 +62,8 @@ export default {
     Register,
     Profile,
     NavigationBar,
-    Tasks
+    Tasks,
+    PublicTasks
   },
   computed: {
     isLoggedIn () {
@@ -82,6 +97,11 @@ export default {
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  .login-register-container {
+    margin-bottom: 10px;
+    padding-bottom: 0;
+  }
 
   .auth-header {
     color: #AAAAAA

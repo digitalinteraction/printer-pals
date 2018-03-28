@@ -42,6 +42,13 @@
             </label>
           </div>
 
+          <div class="field">
+            <label class="checkbox">
+              <input type="checkbox" id="public-task-checkbox" v-model="isPublic">
+              Public
+            </label>
+          </div>
+
           <div class="control">
             <button class="button is-primary" @click="createTask">Save</button>
           </div>
@@ -52,6 +59,7 @@
               <div class="container">
                 <span class="tag" :style="{'background-color': tag.colour}">{{ tag.text }}</span>
                 <span class="tag" style="background-color: #666666;">Draft</span>
+                <span v-if="isPublic" class="tag public-tag">Public 👨‍👩‍👦‍👦</span>
                 <p class="title">
                   {{ title }}
                 </p>
@@ -61,18 +69,6 @@
                   {{ description }}
                 </p>
               </div>
-              <!-- <div class="columns is-mobile">
-                <div class="column is-two-thirds">
-                  <p class="title">
-                    {{ title }}
-                  </p>
-                </div>
-                <div class="column" style="text-align: right;">
-                  <span class="tag" :style="{'background-color': tag.colour}">{{ tag.text }}</span>
-                  <span class="tag" style="background-color: #666666;">Draft</span>
-                </div>
-              </div>
-              <img :src="dummyQRURL" class="qr-code"/> -->
             </div>
             <footer class="card-footer">
               <!-- Icons from: https://robbiepearce.com/softies/ -->
@@ -145,7 +141,8 @@ export default {
       description: '',
       file: null,
       filename: '',
-      mimetype: ''
+      mimetype: '',
+      isPublic: false
     }
   },
   computed: {
@@ -197,7 +194,7 @@ export default {
       let response
 
       try {
-        response = await api.task.createTask(this.title, this.description, this.$cookie.get('token'))
+        response = await api.task.createTask(this.title, this.description, this.isPublic, this.$cookie.get('token'))
       } catch (e) {
         console.error(e)
       }
@@ -215,7 +212,11 @@ export default {
 
       task.mimetype = this.mimetype
 
-      this.$store.commit('addTask', task)
+      if (task.public) {
+        this.$store.commit('addPublicTask', task)
+      } else {
+        this.$store.commit('addTask', task)
+      }
 
       this.title = ''
       this.description = ''
@@ -241,6 +242,11 @@ export default {
   #new-task {
     margin-top: 2%;
   }
+
+  .public-tag {
+    background-color: #ff3860;
+  }
+
   .card {
     margin-top: 5%;
     .card-header {
