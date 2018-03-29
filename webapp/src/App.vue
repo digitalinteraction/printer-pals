@@ -33,6 +33,8 @@
 
     <public-tasks></public-tasks>
 
+    <footer-bar></footer-bar>
+
   </div>
 </template>
 
@@ -45,6 +47,7 @@ import Register from './components/auth/Register.vue'
 import Profile from './components/user/Profile.vue'
 import Tasks from './components/tasks/AllTasks.vue'
 import PublicTasks from './components/tasks/PublicTasks.vue'
+import FooterBar from './components/FooterBar.vue'
 
 // Packages
 import api from './api'
@@ -63,7 +66,8 @@ export default {
     Profile,
     NavigationBar,
     Tasks,
-    PublicTasks
+    PublicTasks,
+    FooterBar
   },
   computed: {
     isLoggedIn () {
