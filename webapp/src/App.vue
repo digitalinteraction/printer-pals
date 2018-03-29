@@ -21,7 +21,7 @@
 
     <profile :user="user" v-else></profile>
 
-    <section class="section">
+    <section class="section" v-if="isLoggedIn">
       <h1 class="is-size-3 container">Your Tasks 🕹</h1>
     </section>
 
