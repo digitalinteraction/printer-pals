@@ -169,7 +169,11 @@ export default {
     },
     printTask: async function () {
       try {
-        await api.task.printTask(this.task._id, this.$cookie.get('token'))
+        if (this.task.public) {
+          await api.task.printPublicTask(this.task._id)
+        } else {
+          await api.task.printTask(this.task._id, this.$cookie.get('token'))
+        }
         alert('Printing your task!')
       } catch (e) {
         alert(e)
@@ -208,10 +212,6 @@ export default {
 <style lang="scss" scoped>
 .card {
     margin-top: 20px;
-}
-
-.title {
-    // padding-left: 1.5%;
 }
 
 .public-tag {
