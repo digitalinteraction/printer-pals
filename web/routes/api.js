@@ -160,6 +160,66 @@ module.exports = function (app) {
     return res.json(response)
   })
 
+  /**
+   * Print a public task by its id.
+   * @type {[type]}
+   */
+  routes.get('/task/public/print/:id', async (req, res, next) => {
+    let id = req.params.id
+
+    let task
+    try {
+      task = await app.schemas.Task.findOne({_id: id})
+    } catch (e) {
+      return next(e)
+    }
+
+    if (!task.public) {
+      let e = new Error()
+      e.status = 500
+      return next(e)
+    }
+
+    // Should print the task asynchronously
+    if (/image/.test(task.mimetype)) { // Check if the task is an image
+      console.log('printing image task')
+      let path = ''
+      try {
+        path = await printer.prepareImage(task)
+        task.path = path
+      } catch (e) {
+        return next(e)
+      }
+
+      try {
+        await printer.printImage(task)
+      } catch (e) {
+        return next(e)
+      }
+    } else if (/audio/.test(task.mimetype)) { // check if the task is a sound
+      // Print the task and play the files
+      console.log('printing sounds')
+
+      try {
+        printer.printSound(task)
+      } catch (e) {
+        return next(e)
+      }
+
+      try {
+        audio.playSoundTask(task)
+      } catch (e) {
+        return next(e)
+      }
+    } else {
+      console.log('unknown mimetype')
+    }
+
+    let response = responses.success
+    response.messages = 'Printing your task!'
+    return res.json(response)
+  })
+
   // **********************************************************************************
   // PROTECTED ROUTES ONLY BELOW
   // **********************************************************************************
@@ -341,6 +401,12 @@ module.exports = function (app) {
       return next(e)
     }
 
+    if (task.userId !== req.user.id) {
+      let e = new Error()
+      e.status = 401
+      return next(e)
+    }
+
     if (task.path) {
       fs.stat(path.join('', task.path), function (err, stats) {
         if (err) {
@@ -364,6 +430,7 @@ module.exports = function (app) {
     response.messages = `Task ${id} deleted`
     return res.json(response)
   })
+
   /**
    * Print a task by its id.
    * @type {[type]}

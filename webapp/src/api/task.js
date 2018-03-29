@@ -109,9 +109,9 @@ const destroyTask = (id, token) => {
 
 /**
  * Print a task
- * @param  {[type]} id
- * @param  {[type]} token
- * @return {[type]}
+ * @param  {string} id
+ * @param  {string} token
+ * @return {Promise<Object>}
  */
 const printTask = (id, token) => {
   return new Promise((resolve, reject) => {
@@ -121,6 +121,21 @@ const printTask = (id, token) => {
       }
     }
     axios.get(`${URL}/task/print/${id}`, options).then((response) => {
+      resolve(response)
+    }).catch((error) => {
+      reject(error)
+    })
+  })
+}
+
+/**
+ * Print a public task
+ * @param  {string} id Task ID
+ * @return {[type]}    [description]
+ */
+const printPublicTask = (id) => {
+  return new Promise((resolve, reject) => {
+    axios.get(`${URL}/task/public/print/${id}`).then((response) => {
       resolve(response)
     }).catch((error) => {
       reject(error)
@@ -163,5 +178,6 @@ export default {
   updateTask,
   destroyTask,
   printTask,
+  printPublicTask,
   uploadMedia
 }
