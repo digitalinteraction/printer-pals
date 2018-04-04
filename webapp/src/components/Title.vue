@@ -11,9 +11,9 @@
                 <strong>Let's play a game together! Use Printer Pals to upload a sound or a picture and add a task you can do together.</strong>
                 <br />
                 <br />
-                Upload a song and lyrics you can sing together 🎤
+                Upload a song with lyrics and sing along together 🎤
                 <br/>
-                Upload a picture of somewhere you recognise and a pop quiz 🏆
+                Upload a picture of somewhere you recognise start a pop quiz 🏆
               </p>
             </div>
           </div>
