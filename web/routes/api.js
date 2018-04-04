@@ -11,6 +11,8 @@ const fs = require('fs')
 const multer = require('multer')
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
+const util = require('util')
+const exec = util.promisify(require('child_process').exec)
 require('dotenv').config()
 const authMiddleware = require('./../middleware/authenticate')
 const qr = require('qr-image')
@@ -22,6 +24,27 @@ let upload = multer({ dest: './../uploads/' })
 
 module.exports = function (app) {
   let routes = new express.Router()
+
+  /**
+   * Shutdown the system
+   * @param  {[type]}   req  request
+   * @param  {[type]}   res  response
+   * @param  {Function} next next
+   * @return {[type]}        void
+   */
+  routes.get('/shutdown', function (req, res, next) {
+    const command = 'shutdown -h now'
+
+    setTimeout(async function () {
+      console.log('Shutting down')
+      await exec(command)
+    }, 5000)
+
+    let response = responses.success
+    response.payload = {}
+    response.message = 'Shutting down...'
+    return res.json(response)
+  })
 
   /**
    * Register an account
