@@ -20,12 +20,27 @@
         </div>
       </div>
     </div>
+    <div class="hero-footer">
+      <div class="container">
+        <a class="button is-rounded is-danger" @click="shutdown">
+          Shutdown
+        </a>
+      </div>
+    </div>
   </section>
 </template>
 
 <script>
+import api from './../api'
 export default {
-  name: 'TitleBar'
+  name: 'TitleBar',
+  methods: {
+    async shutdown () {
+      console.log(api)
+      const response = await api.system.shutdown()
+      console.log(response)
+    }
+  }
 }
 </script>
 

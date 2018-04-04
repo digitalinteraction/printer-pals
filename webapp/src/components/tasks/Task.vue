@@ -1,22 +1,16 @@
 <template lang="html">
   <div id="task">
     <div class="columns">
-      <div class="column is-two-fifths">
+      <div class="column is-three-fifths">
         <div class="card">
           <div class="card-content">
-            <div class="container">
               <span class="tag" :style="{'background-color': tag.colour}">{{ tag.text }}</span>
               <span v-if="task.public" class="tag public-tag">Public 👨‍👩‍👦‍👦</span>
-              <p class="title">
-                {{ title }}
+              <p class="title card-title" v-html="title">
               </p>
-            </div>
-            <div class="container">
-              <p>
-                {{ description }}
-              </p>
-            </div>
-            <!-- <img :src="url" class="qr-code"/> -->
+              <pre v-html="description">
+                <!-- {{ `${description}` }} -->
+              </pre>
           </div>
           <footer class="card-footer">
             <!-- Icons from: https://robbiepearce.com/softies/ -->
@@ -119,6 +113,7 @@ export default {
       return this.task.title
     },
     description () {
+      console.log(this.task.description)
       return this.task.description
     }
   },
@@ -214,6 +209,11 @@ export default {
     margin-top: 20px;
 }
 
+.card-title {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
 .public-tag {
   background-color: #ff3860;
 }
@@ -243,5 +243,15 @@ svg {
 .tag {
   position: relative;
   color: white;
+}
+
+pre {
+  font-family: inherit;
+  word-break: normal;
+  word-wrap: break-word;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  font-size: 1.1rem;
 }
 </style>

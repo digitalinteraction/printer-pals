@@ -56,19 +56,15 @@
         <div class="dummy-card" v-if="hasTitle">
           <div class="card">
             <div class="card-content">
-              <div class="container">
                 <span class="tag" :style="{'background-color': tag.colour}">{{ tag.text }}</span>
                 <span class="tag" style="background-color: #666666;">Draft</span>
                 <span v-if="isPublic" class="tag public-tag">Public 👨‍👩‍👦‍👦</span>
                 <p class="title">
                   {{ title }}
                 </p>
-              </div>
-              <div class="container">
                 <p>
                   {{ description }}
                 </p>
-              </div>
             </div>
             <footer class="card-footer">
               <!-- Icons from: https://robbiepearce.com/softies/ -->

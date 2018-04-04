@@ -6,9 +6,9 @@ const URL = commons.URL
  * Shutdown the printer
  * @return {Promise}
  */
-const shutdown = async () => {
+const shutdown = () => {
   return new Promise((resolve, reject) => {
-    axios.get(`${URL}/system/shutdown`, (response) => {
+    axios.get(`${URL}/shutdown`).then((response) => {
       resolve(response)
     }).catch((error) => {
       reject(error)
@@ -16,6 +16,6 @@ const shutdown = async () => {
   })
 }
 
-module.exports = {
+export default {
   shutdown
 }
