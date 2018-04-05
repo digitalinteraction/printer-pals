@@ -15,6 +15,10 @@
                 <br/>
                 Upload a picture of somewhere you recognise start a pop quiz 🏆
               </p>
+
+              <a class="button is-rounded is-danger shutdown-button" @click="shutdown">
+                Shutdown
+              </a>
             </div>
           </div>
         </div>
@@ -22,9 +26,11 @@
     </div>
     <div class="hero-footer">
       <div class="container">
-        <a class="button is-rounded is-danger" @click="shutdown">
-          Shutdown
-        </a>
+        <div class="columns">
+          <div class="column">
+
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -36,13 +42,19 @@ export default {
   name: 'TitleBar',
   methods: {
     async shutdown () {
-      console.log(api)
-      const response = await api.system.shutdown()
-      console.log(response)
+      const confirmed = confirm('This will shutdown the printer.')
+      if (confirmed) {
+        console.log(api)
+        const response = await api.system.shutdown()
+        console.log(response.data.message)
+      }
     }
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.shutdown-button {
+  margin-top: 10%;
+}
 </style>
