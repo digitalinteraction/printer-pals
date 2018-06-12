@@ -77,11 +77,14 @@ mongo --version && mongod -v | grep "db version" && node -v && npm -v
 
 chmod 755 mongod.service
 chmod 755 printerpals.service
+chmod 755 volume.service
 
 cp mongod.service /etc/systemd/system/
 cp printerpals.service /etc/systemd/system/
+cp volume.service /etc/systemd/system/
 
 systemctl enable mongod.service
 systemctl enable printerpals.service
+systemctl enable volume.service
 
 shutdown -r now

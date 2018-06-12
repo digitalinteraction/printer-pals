@@ -1,0 +1,16 @@
+[Unit]
+Description=Master Volume Buttons
+Requires=printerpals.service
+After=network.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+ExecStart=/usr/local/bin/node input.js
+WorkingDirectory=/home/pi/printer-pals/
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=root
+Group=root
