@@ -54,7 +54,7 @@ mongod --storageEngine=mmapv1 --dbpath ~/data/db &
 ########################################################################################################################
 ### Install printer-pals dependencies ###
 ########################################################################################################################
-printf "\033[1;31mInstalling printer-pal dependencies\033[0m\n"
+printf "\033[1;31mInstalling printer-pals dependencies\033[0m\n"
 
 # Create uploads folder
 mkdir -p uploads
@@ -87,5 +87,7 @@ cp volume.service /etc/systemd/system/
 systemctl enable mongod.service
 systemctl enable printerpals.service
 systemctl enable volume.service
+
+cp ./.env.example ./web/.env
 
 shutdown -r now
