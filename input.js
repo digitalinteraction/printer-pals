@@ -1,4 +1,4 @@
-const wpi = require('wiring-pi')
+const wpi = require('wiringpi-node')
 const util = require('util')
 const exec = util.promisify(require('child_process').exec)
 const LogScale = require('log-scale')
