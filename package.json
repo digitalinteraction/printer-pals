@@ -28,7 +28,8 @@
     "qrcode-reader": "^1.0.4",
     "require-directory": "^2.1.1",
     "serialport": "^6.0.5",
-    "thermalprinter": "^0.3.8"
+    "thermalprinter": "^0.3.8",
+    "wiring-pi": "^2.2.1"
   },
   "devDependencies": {},
   "scripts": {
