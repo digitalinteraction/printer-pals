@@ -29,7 +29,7 @@
     "require-directory": "^2.1.1",
     "serialport": "^6.0.5",
     "thermalprinter": "^0.3.8",
-    "wiring-pi": "^2.2.1"
+    "wiringpi-node": "^2.4.4"
   },
   "devDependencies": {},
   "scripts": {

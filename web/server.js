@@ -33,7 +33,7 @@ module.exports = {
         app.schemas = schemas
         resolve(app)
       })
-      mongoose.connection.once('error', reject)
+      mongoose.connection.once('error', (err) => {reject(err)})
     })
   },
 
