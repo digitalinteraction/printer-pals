@@ -12,5 +12,4 @@ printer/qr-codes
 web/printer/printer-ready/*.png
 web/printer/printer-ready/*.jpeg
 web/printer/qr-codes
-printer/
 web/node_modules/
