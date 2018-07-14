@@ -3,12 +3,9 @@ services:
   api:
       build: ./web
       ports:
-      - 8888:8888
+      - 8888:80
       volumes:
       - "./web:/app/web"
-      # - "./app.js:/app/app.js"
-      # - "./.env:/app/.env"
-      # - "./printer:/app/printer"
       depends_on:
         - mongo
       links:

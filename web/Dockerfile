@@ -50,8 +50,8 @@ RUN mkdir -p printer/qr-codes
 # COPY ./printer /app/printer
 
 
-# Expose port 8888
-EXPOSE 8888
+# Expose port 80
+EXPOSE 80
 
 
 # Start the server.

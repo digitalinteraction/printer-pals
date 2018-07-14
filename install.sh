@@ -22,6 +22,9 @@ printf "\033[1;31mUpdating and upgrading packages\033[0m\n"
 # Check for and install updates
 apt-get update -y && apt-get upgrade -y
 
+printf "\033[1;31mInstall asound\033[0m\n"
+apt-get install libasound2-dev
+
 ########################################################################################################################
 ### Install Node ###
 ### https://github.com/nodejs/help/wiki/Installation
@@ -63,7 +66,7 @@ cp -R ~/mongo-3.2/* /usr/bin/
 rm -r ~/mongo-3.2
 
 # Create data folder
-mkdir -p ~/data/db
+mkdir -p /home/pi/data/db
 
 # Start mongo
 printf "\033[1;31mStarting Mongo\033[0m\n"
