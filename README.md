@@ -100,7 +100,7 @@ After connecting the Pi to WiFi, we can download printer-pals to the Pi
 so that we can begin installing the dependencies needed for it run
 properly. To download the project run the command:
 ```shell
-git clone https://github.com/digitalinteractions/printer-pals.git
+git clone https://github.com/digitalinteraction/printer-pals.git
 cd printer-pals
 ```
 The first command will download the latest version of the project from
