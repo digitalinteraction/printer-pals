@@ -7,5 +7,6 @@ WantedBy=multi-user.target
 
 [Service]
 ExecStart=/usr/bin/mongod --storageEngine=mmapv1 --dbpath=/home/pi/data/db
+ExecStop=/user/bin/mongod --shutdown
 Restart=always
 User=pi

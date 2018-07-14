@@ -127,7 +127,7 @@ module.exports = function (app) {
     }
 
     if (!user) {
-      let e = new Error()
+      let e = new Error('User not found')
       e.status = 400
       return next(e)
     }

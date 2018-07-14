@@ -1,5 +1,23 @@
 #!/bin/sh
 
+# Install printer pals
+#   Download:
+#     - mongo
+#     - node
+#   Install:
+#     - amixer
+#     - mongo
+#     - node
+#   Setup:
+#     - API
+#     - webapp
+#   Add:
+#     - mongo service
+#     - volume service
+#     - api service
+#
+#  WILL RESTART PI
+
 printf "\033[1;31mUpdating and upgrading packages\033[0m\n"
 # Check for and install updates
 apt-get update -y && apt-get upgrade -y
@@ -54,7 +72,7 @@ mongod --storageEngine=mmapv1 --dbpath ~/data/db &
 ########################################################################################################################
 ### Install printer-pals dependencies ###
 ########################################################################################################################
-printf "\033[1;31mInstalling printer-pal dependencies\033[0m\n"
+printf "\033[1;31mInstalling printer-pals dependencies\033[0m\n"
 
 # Create uploads folder
 mkdir -p uploads
@@ -66,6 +84,7 @@ npm install --unsafe-perm
 npm install -g nodemon
 
 # Install vue dependencies
+npm --prefix ./web install --unsafe-perm=true ./web
 npm --prefix ./webapp install --unsafe-perm=true ./webapp
 
 # Build vue project
@@ -75,13 +94,25 @@ npm --prefix ./webapp run build
 printf "\033[1;31mChecking mongo and node versions\033[0m\n"
 mongo --version && mongod -v | grep "db version" && node -v && npm -v
 
+# Make services executable
 chmod 755 mongod.service
 chmod 755 printerpals.service
+chmod 755 volume.service
 
+# Add services
 cp mongod.service /etc/systemd/system/
 cp printerpals.service /etc/systemd/system/
+cp volume.service /etc/systemd/system/
 
+# Set services to run at boot
 systemctl enable mongod.service
 systemctl enable printerpals.service
+systemctl enable volume.service
+
+# Add printer to hosts.
+echo "127.0.0.1       printer" > /etc/hosts
+
+# Copy environment files
+cp ./.env.example ./web/.env
 
 shutdown -r now
