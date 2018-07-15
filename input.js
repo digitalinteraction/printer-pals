@@ -62,21 +62,18 @@ const getSystemVolume = () => {
 }
 
 async function readUp () {
-  console.log('volume up')
   const value = wpi.digitalRead(upPin)
 
   // ignore up bounce
-  if (value < 1) {
+  if (value > 0) {
     await setSystemVolume(10)
   }
 }
 
 async function readDown () {
-  console.log('volume down')
   const value = wpi.digitalRead(downPin)
-  console.log(value)
 
-  if (value < 1) {
+  if (value > 0) {
     await setSystemVolume(-10)
   }
 }
