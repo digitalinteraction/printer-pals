@@ -22,8 +22,9 @@ printf "\033[1;31mUpdating and upgrading packages\033[0m\n"
 # Check for and install updates
 apt-get update -y && apt-get upgrade -y
 
-printf "\033[1;31mInstall asound\033[0m\n"
+printf "\033[1;31mSetup USB speaker playback\033[0m\n"
 apt-get install libasound2-dev
+cp /home/pi/printer-pals/alsa.conf /usr/share/alsa/alsa.conf
 
 ########################################################################################################################
 ### Install Node ###

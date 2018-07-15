@@ -25,7 +25,7 @@ const setSystemVolume = async (increment) => {
   let tVolume = scale.logarithmicToLinear((volume + increment))
 
   // use amixer to set master volume
-  const command = `amixer sset PCM ${tVolume * 100}%`
+  const command = `amixer -c 1 sset PCM ${tVolume * 100}%`
 
   try {
     if (tVolume) {
@@ -45,7 +45,7 @@ const setSystemVolume = async (increment) => {
 const getSystemVolume = () => {
   return new Promise((resolve, reject) => {
     // use amixer to get volume
-    const command = 'amixer get PCM'
+    const command = 'amixer -c 1 get PCM'
     exec(command, (err, stdout, stderr) => {
       if (err) reject(err)
       // get value from stdout
