@@ -5,6 +5,8 @@
   Endpoints for API
  */
 
+const systemUtils = require('./../utils.js')
+
 const express = require('express')
 const path = require('path')
 const fs = require('fs')
@@ -43,6 +45,35 @@ module.exports = function (app) {
     let response = responses.success
     response.payload = {}
     response.message = 'Shutting down...'
+    return res.json(response)
+  })
+
+  routes.get('/volume/:state', async function (req, res, next) {
+    const state = req.params.state
+    console.log(state)
+
+    try {
+      switch (state) {
+        case 'up':
+          await systemUtils.setSystemVolume(10)
+          break
+        case 'down':
+          await systemUtils.setSystemVolume(-10)
+          break
+        default:
+          const error = new Error()
+          error.status = 402
+          return next(error)
+      }
+    } catch (e) {
+      const error = new Error()
+      error.status = 500
+      return next(error)
+    }
+
+    let response = responses.success
+    response.payload = {}
+    response.message = `Volume turned ${state}`
     return res.json(response)
   })
 
@@ -516,7 +547,13 @@ module.exports = function (app) {
    */
   routes.post('/media/upload', upload.single('file'), async (req, res, next) => {
     const mimetype = req.file.mimetype
-    const ext = mimetype.split('/')[1]
+    let ext = req.file.originalname.split('.')[req.file.originalname.split('.').length - 1]
+
+    switch (ext) {
+      case 'mpeg':
+        ext = 'mp3'
+        break
+    }
 
     const filepath = path.join(__dirname, `/../${req.file.path}.${ext}`)
 

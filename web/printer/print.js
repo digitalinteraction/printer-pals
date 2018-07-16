@@ -25,9 +25,6 @@ module.exports = {
    */
   printImage: (task) => {
     return new Promise(async (resolve, reject) => {
-      // Get QR Code
-      const fileName = await qrUtils.saveTaskQRToFile(task)
-
       // Create a serial port with the location and baudrate of the printer
       const port = new SerialPort(loc, {
         baudRate: baudrate,
@@ -45,7 +42,6 @@ module.exports = {
         printer.horizontalLine(32)
           // Typefacing and text options
           .printLine('\r\n')
-          .printImage(path.join(__dirname, `./${fileName}`))
           .printImage(task.path)
           .horizontalLine(32)
           .printLine(task.title)
@@ -79,14 +75,12 @@ module.exports = {
    */
   printSound: (task) => {
     return new Promise(async (resolve, reject) => {
-      const fileName = await qrUtils.saveTaskQRToFile(task)
-      console.log(fileName)
       // Create a serial port with the location and baudrate of the printer
       const port = new SerialPort(loc, {
         baudRate: baudrate,
         autoOpen: false
       })
-
+      const notesPath = path.join(__dirname, '/notes.jpeg')
       // When a connection to the port opens
       port.on('open', () => {
         // Create a new printer
@@ -95,7 +89,8 @@ module.exports = {
         printer.horizontalLine(32)
           // Typefacing and text options
           .printLine('\r\n')
-          .printImage(path.join(__dirname, `/${fileName}`))
+          .printImage(notesPath)
+          .horizontalLine(32)
           .printLine(task.title)
           .printLine(task.description)
           .horizontalLine(32)

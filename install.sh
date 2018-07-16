@@ -23,7 +23,7 @@ printf "\033[1;31mUpdating and upgrading packages\033[0m\n"
 apt-get update -y && apt-get upgrade -y
 
 printf "\033[1;31mSetup USB speaker playback\033[0m\n"
-apt-get install libasound2-dev
+apt-get install -y libasound2-dev mpg321
 cp /home/pi/printer-pals/alsa.conf /usr/share/alsa/alsa.conf
 
 ########################################################################################################################
