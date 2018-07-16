@@ -20,7 +20,7 @@ const mutations = {
    * @return {void}
    */
   removeTask (state, payload) {
-    let task = {}
+    let task = -1
     for (let i = 0; i < state.tasks.length; i++) {
       if (state.tasks[i]._id === payload) {
         task = state.tasks[i]._id
@@ -30,7 +30,7 @@ const mutations = {
     }
 
     // Check public tasks if not found
-    if (!task) {
+    if (task < 0) {
       for (let i = 0; i < state.publicTasks.length; i++) {
         if (state.publicTasks[i]._id === payload) {
           task = state.publicTasks[i]._id

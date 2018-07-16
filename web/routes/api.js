@@ -547,7 +547,13 @@ module.exports = function (app) {
    */
   routes.post('/media/upload', upload.single('file'), async (req, res, next) => {
     const mimetype = req.file.mimetype
-    const ext = mimetype.split('/')[1]
+    let ext = req.file.originalname.split('.')[req.file.originalname.split('.').length - 1]
+
+    switch (ext) {
+      case 'mpeg':
+        ext = 'mp3'
+        break
+    }
 
     const filepath = path.join(__dirname, `/../${req.file.path}.${ext}`)
 
