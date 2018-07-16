@@ -17,10 +17,23 @@
               </p>
 
               <a class="button is-rounded is-danger shutdown-button" @click="shutdown">
-                Shutdown
+                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <!-- Generator: Sketch 43.2 (39069) - http://www.bohemiancoding.com/sketch -->
+                  <title>power</title>
+                  <desc>Created with Sketch.</desc>
+                  <defs></defs>
+                  <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+                      <g id="Artboard-4" transform="translate(-708.000000, -203.000000)" stroke="#333333" stroke-width="2">
+                          <g id="56" transform="translate(708.000000, 203.000000)">
+                              <path d="M8.0419548,6.04615725 C5.62763156,7.42332452 4,10.0215854 4,13 C4,17.418278 7.581722,21 12,21 L12,21 C16.418278,21 20,17.418278 20,13 C20,10.0407857 18.3932858,7.45683963 16.0046386,6.07294293" id="Oval-57" stroke-linejoin="round"></path>
+                              <path d="M12,3 L12,12" id="Path-137"></path>
+                          </g>
+                      </g>
+                  </g>
+              </svg>
               </a>
 
-              <a class="button is-rounded is-warning shutdown-button" @click="volume('down')">
+              <a class="button is-rounded is-info volume-button" @click="volume('down')">
                 <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <!-- Generator: Sketch 43.2 (39069) - http://www.bohemiancoding.com/sketch -->
                     <title>volume-down</title>
@@ -37,7 +50,7 @@
                 </svg>
               </a>
 
-              <a class="button is-rounded is-warning shutdown-button" @click="volume('up')">
+              <a class="button is-rounded is-info volume-button" @click="volume('up')">
                 <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <defs></defs>
                     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
@@ -90,8 +103,21 @@ export default {
 svg {
   g {
     #Artboard-4 {
+      transition: all .1s ease-in;
       stroke: white;
     }
+  }
+}
+.volume-button {
+  transition: all .1s ease-in;
+  margin-top: 10%;
+}
+
+.volume-button:active {
+  background: white;
+
+  #Artboard-4 {
+    stroke: hsl(48, 100%, 67%);
   }
 }
 </style>
