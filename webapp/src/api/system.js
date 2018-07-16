@@ -16,6 +16,17 @@ const shutdown = () => {
   })
 }
 
+const volume = (state) => {
+  return new Promise((resolve, reject) => {
+    axios.get(`${URL}/volume/${state}`).then((response) => {
+      resolve(response)
+    }).catch((error) => {
+      reject(error)
+    })
+  })
+}
+
 export default {
-  shutdown
+  shutdown,
+  volume
 }
