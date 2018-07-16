@@ -6,25 +6,18 @@
  *  Create an audio player and play uploaded sounds through the device.
  */
 
-const Player = require('player')
+const util = require('util')
+const exec = util.promisify(require('child_process').exec)
 
 module.exports = {
   playSoundTask: (task) => {
-    return new Promise((resolve, reject) => {
-      // create player instance
-      console.log('Setting up player for: ', task.path)
-      const player = new Player(task.path)
-
-      // play now and callback when playend
-      player.play((err, player) => {
-        if (err) reject(err)
-        console.log('playend!')
-        resolve()
-      })
-
-      player.on('error', (e) => {
-        console.error(e)
-      })
-    })
+    const ext = task.path.split('.')[task.path.split('.').length - 1]
+    switch (ext) {
+      case 'mp3':
+        exec(`mpg321 ${task.path}`)
+        break
+      default:
+        exec(`aplay ${task.path}`)
+    }
   }
 }

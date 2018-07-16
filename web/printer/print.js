@@ -90,6 +90,7 @@ module.exports = {
           // Typefacing and text options
           .printLine('\r\n')
           .printImage(notesPath)
+          .horizontalLine(32)
           .printLine(task.title)
           .printLine(task.description)
           .horizontalLine(32)
