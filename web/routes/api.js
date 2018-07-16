@@ -5,6 +5,8 @@
   Endpoints for API
  */
 
+const systemUtils = require('./../utils.js')
+
 const express = require('express')
 const path = require('path')
 const fs = require('fs')
@@ -43,6 +45,35 @@ module.exports = function (app) {
     let response = responses.success
     response.payload = {}
     response.message = 'Shutting down...'
+    return res.json(response)
+  })
+
+  routes.get('/volume/:state', async function (req, res, next) {
+    const state = req.params.state
+    console.log(state)
+
+    try {
+      switch (state) {
+        case 'up':
+          await systemUtils.setSystemVolume(10)
+          break
+        case 'down':
+          await systemUtils.setSystemVolume(-10)
+          break
+        default:
+          const error = new Error()
+          error.status = 402
+          return next(error)
+      }
+    } catch (e) {
+      const error = new Error()
+      error.status = 500
+      return next(error)
+    }
+
+    let response = responses.success
+    response.payload = {}
+    response.message = `Volume turned ${state}`
     return res.json(response)
   })
 
